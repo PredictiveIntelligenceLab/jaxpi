@@ -1,6 +1,6 @@
 # Navier–Stokes flow in a 2D torus
 
-## Problem Set-up
+## Problem Setup
 
 The partial differential equation is defined as
 
@@ -10,6 +10,7 @@ w_t +\mathbf{u} \cdot \nabla w &= \frac{1}{\text{Re}} \Delta w,   \quad \text{ i
 w(0, x, y) &=w_{0}(x, y),   \quad \text{ in }  \Omega,
 \end{aligned}$$
 
+For this example, we set Re=100 and aim to simulate the system up to T=10.
 
 
 ## Results
