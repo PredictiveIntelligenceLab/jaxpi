@@ -37,8 +37,6 @@ We perform an ablation study on **Algorithm 1**. Table below shows the result of
 
 ### State of the art
 
-We also perform a hyperparameter sweep to find the optimal network architecture, loss weighting scheme and optimizer configuration as 
-
 
 The best relative $L^2$ error is brought down to $1.61 \times 10^{-1}$. The figure below shows the exact solution, prediction, and absolute error. The model parameter can be found at [google drive link]
 

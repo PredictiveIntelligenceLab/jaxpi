@@ -31,7 +31,7 @@ For detailed sweep information, please visit [our Weight & Bias dashboard](https
 
 ### State of the Art
 
-In this section, we present our state-of-the-art results. These are achieved by conducting a comprehensive hyperparameter sweep to find the optimal combination of network architecture, loss weighting scheme, and optimizer configuration. 
+We present our state-of-the-art results. These are achieved by conducting a comprehensive hyperparameter sweep to find the optimal combination of network architecture, loss weighting scheme, and optimizer configuration. 
 
 To replicate these results, use the following command:
 

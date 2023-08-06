@@ -1,6 +1,6 @@
 # Stokes flow
 
-## Problem Set-up
+## Problem Setup
 
 The partial differential equation is defined as 
 
@@ -55,8 +55,19 @@ We perform an ablation study on **Algorithm 1**. Table below shows the result of
 
 ### State of the art
 
-We also perform a hyperparameter sweep to find the optimal network architecture, loss weighting scheme and optimizer configuration as 
+We present our state-of-the-art results. 
 
+To reproduce these results, use the following command:
+
+```
+python3 main.py --config/sota.py
+```
+
+Once trained, to obtain the final predicted error and visualizations, run:
+
+```
+python3 main.py --config/sota.py --mode=eval
+```
 
 
 The best relative $L^2$ error is brought down to $8.04\times 10^{-5}$. The figure below shows the exact solution, prediction, and absolute error. The model parameter can be found at [google drive link]
