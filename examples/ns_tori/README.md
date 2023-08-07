@@ -15,4 +15,4 @@ For this example, we set Re=100 and aim to simulate the system up to T=10.
 
 ## Results
 
-![ns_tori](/figures/ns_animation.gif)
+![ns_tori](figures/ns_animation.gif)

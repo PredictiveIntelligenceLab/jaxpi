@@ -8,8 +8,8 @@ We follow the problem setup in [here](https://wwwold.mathematik.tu-dortmund.de/~
 
 ## Results
 
-![ns_cylinder](/figures/ns_cylinder_u.gif)
+![ns_cylinder](figures/ns_cylinder_u.gif)
 
-![ns_cylinder](/figures/ns_cylinder_v.gif)
+![ns_cylinder](figures/ns_cylinder_v.gif)
 
-![ns_cylinder](/figures/ns_cylinder_w.gif)]
+![ns_cylinder](figures/ns_cylinder_w.gif)]
