@@ -12,4 +12,4 @@ We follow the problem setup in [here](https://wwwold.mathematik.tu-dortmund.de/~
 
 ![ns_cylinder](figures/ns_cylinder_v.gif)
 
-![ns_cylinder](figures/ns_cylinder_w.gif)]
+![ns_cylinder](figures/ns_cylinder_w.gif)
