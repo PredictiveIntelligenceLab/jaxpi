@@ -29,7 +29,8 @@ To mitigate this, it's recommended to avoid sampling boundary points from this a
 
 ### Ablation study
 
-For the final Re=1000, we perform an ablation study on **Algorithm 1**. Table below shows the result of the ablation study. The detail sweep can be found at [weight and bias link]
+For the final Re=1000, we perform an ablation study on **Algorithm 1**. Table below shows the result of the ablation study. The detail sweep can be found at [weight and bias link](https://wandb.ai/jaxpi/ldc?workspace=user-sifanw)
+
 
 | **Fourier Feature** | **RWF** | **Grad Norm** | **Modified MLP** | **Rel. $L^2$ error** | **Run time (min)** |
 |:-------------------:|:-------:|:-------------:|:----------------:|:--------------------:|:------------------:|

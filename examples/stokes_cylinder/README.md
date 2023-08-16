@@ -38,7 +38,7 @@ where $\mathbf{n}$ denotes the outer normal vector.
 ## Results
 
 ### Ablation study
-We perform an ablation study on **Algorithm 1**. Table below shows the result of the ablation study. The detail sweep can be found at [weight and bias link]
+We perform an ablation study on **Algorithm 1**. Table below shows the result of the ablation study. The detail training information can be found at [weight and bias link](https://wandb.ai/jaxpi/stokes?workspace=user-sifanw)
 
 
 

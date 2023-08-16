@@ -21,7 +21,7 @@ Specifically, we take $\alpha = 100/16, \beta=100/16^2,  \gamma=100/16^4$ and $u
 ## Results
 ### Ablation study
 
-We perform an ablation study on **Algorithm 1**. Table below shows the result of the ablation study. The detail sweep can be found at [weight and bias link]
+We perform an ablation study on **Algorithm 1**. Table below shows the result of the ablation study. The detail sweep can be found at [weight and bias link](https://wandb.ai/jaxpi/ks?workspace=user-sifanw)
 
 
 | **Modified MLP** | **Fourier Feature** | **RWF** | **Grad Norm** | **Causal** | **Rel. $L^2$ Error** | **Runtime (min)** |
