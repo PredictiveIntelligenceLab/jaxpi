@@ -38,7 +38,7 @@ where $\mathbf{n}$ denotes the outer normal vector.
 ## Results
 
 ### Ablation study
-We perform an ablation study on **Algorithm 1**. Table below shows the result of the ablation study. The detail training information can be found at [weight and bias link](https://wandb.ai/jaxpi/stokes?workspace=user-sifanw)
+We perform an ablation study on **Algorithm 1**. Table below shows the result of the ablation study. The detail training information can be found at [weight and bias link](https://wandb.ai/jaxpi/stokes?workspace=user-)
 
 
 
@@ -70,7 +70,9 @@ python3 main.py --config/sota.py --mode=eval
 ```
 
 
-The best relative $L^2$ error is brought down to $8.04\times 10^{-5}$. The figure below shows the exact solution, prediction, and absolute error. The model parameter can be found at [google drive link]
+The best relative $L^2$ error is brought down to $8.04\times 10^{-5}$. The figure below shows the exact solution, prediction, and absolute error. 
+The model parameter can be found at [google drive link](https://drive.google.com/drive/folders/11T5ht2LGmIZigIKiLvpyUMbSxlrxb1sF?usp=drive_link).
+For a comprehensive log of the loss and weights, please visit [our Weights & Biases dashboard](https://wandb.ai/jaxpi/stokes?workspace=user-).
 
 <figure>
 <img src=figures/stokes_U.png style="width:100%">

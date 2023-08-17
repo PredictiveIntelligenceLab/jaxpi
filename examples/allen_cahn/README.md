@@ -15,7 +15,7 @@ $$\begin{aligned}
 
 ### Ablation study
 We conducted an ablation study on **Algorithm 1**, maintaining identical hyperparameters across all tests. The results are displayed in the table below. You can find the specific configuration of the hyperparameters in the `configs` directory. 
-For detailed sweep information, please visit [our Weight & Bias dashboard](https://wandb.ai/jaxpi/allen_cahn?workspace=user-sifanw).
+For detailed sweep information, please visit [our Weight & Bias dashboard](https://wandb.ai/jaxpi/allen_cahn?workspace=user-).
 
 
 | **Ablation Settings** |     |     |     |      **Performance**      |     |
@@ -49,9 +49,9 @@ python3 main.py --config/sota.py --mode=eval
 Our methods have managed to reduce the best relative $L^2$ error to
 $9.55 \times 10^{-5}$. The figure below illustrates the exact solution, our model's prediction, and the absolute error. 
 
-You can access the trained model parameters via [this Google Drive link](URL).
+You can access the trained model parameters via [this Google Drive link](https://drive.google.com/drive/folders/1MJihlw87l9YiVVLA8JBtCubf8PB6hPZY?usp=drive_link).
 
-For a comprehensive log of the loss and weights, please visit [our Weights & Biases dashboard](URL2).
+For a comprehensive log of the loss and weights, please visit [our Weights & Biases dashboard](https://wandb.ai/jaxpi/allen_cahn?workspace=user-).
 
 <figure>
 <img src="figures/ac_pred.png" alt="Allen Cahn equation comparison" style="width:100%">

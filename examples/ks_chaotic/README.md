@@ -21,7 +21,7 @@ Specifically, we take $\alpha = 100/16, \beta=100/16^2,  \gamma=100/16^4$ and $u
 ## Results
 ### Ablation study
 
-We perform an ablation study on **Algorithm 1**. Table below shows the result of the ablation study. The detail sweep can be found at [weight and bias link](https://wandb.ai/jaxpi/ks?workspace=user-sifanw)
+We perform an ablation study on **Algorithm 1**. Table below shows the result of the ablation study. The detail sweep can be found at [weight and bias link](https://wandb.ai/jaxpi/ks?workspace=user-)
 
 
 | **Modified MLP** | **Fourier Feature** | **RWF** | **Grad Norm** | **Causal** | **Rel. $L^2$ Error** | **Runtime (min)** |
@@ -38,7 +38,7 @@ We perform an ablation study on **Algorithm 1**. Table below shows the result of
 ### State of the art
 
 
-The best relative $L^2$ error is brought down to $1.61 \times 10^{-1}$. The figure below shows the exact solution, prediction, and absolute error. The model parameter can be found at [google drive link]
+The best relative $L^2$ error is brought down to $1.61 \times 10^{-1}$. The figure below shows the exact solution, prediction, and absolute error. The model parameter can be found at [google drive link](https://drive.google.com/drive/folders/1haoDhCUfCq69ptsA2qgiX8yGhwGLbLaT?usp=drive_link)
 
 <figure>
 <img src=figures/ks_chaotic.png style="width:100%">

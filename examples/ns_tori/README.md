@@ -15,4 +15,9 @@ For this example, we set Re=100 and aim to simulate the system up to T=10.
 
 ## Results
 
+The animation below shows comparison between the exact solution and the prediction.
+The model parameter can be found at [google drive link](https://drive.google.com/drive/folders/1n2k2613BWWLcug3CI4i3ZQnBvgrHS1Ph?usp=drive_link).
+For a comprehensive log of the loss and weights, please visit [our Weights & Biases dashboard](https://wandb.ai/jaxpi/ns_tori?workspace=user-).
+
+
 ![ns_tori](figures/ns_animation.gif)

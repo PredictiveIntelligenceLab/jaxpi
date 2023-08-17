@@ -39,7 +39,7 @@ For further details, see the `PeriodEmbs` class.
 
 ### Ablation study
 We conducted an ablation study on **Algorithm 1**, maintaining identical hyperparameters across all tests. The results are displayed in the table below. You can find the specific configuration of the hyperparameters in the `configs` directory. 
-For detailed sweep information, please visit [our Weight & Bias dashboard](https://wandb.ai/jaxpi/adv?workspace=user-sifanw).
+For detailed sweep information, please visit [our Weight & Bias dashboard](https://wandb.ai/jaxpi/adv?workspace=user-).
 
 
 | **Time Period** | **Fourier Feature** | **RWF** | **Grad Norm** | **Causal** | **Rel. $L^2$ Error** | **Runtime (min)** |
@@ -71,7 +71,7 @@ python3 main.py --config/sota.py --mode=eval
 ```
 
 The best relative $L^2$ error is  $6.884\times 10^{-4}$. The figure below shows the exact solution, prediction, and absolute error. 
-The model parameter can be found at [google drive link]. For a comprehensive log of the loss and weights, please visit [our Weights & Biases dashboard](URL2).
+The model parameter can be found at [google drive link](https://drive.google.com/drive/folders/19BEmUYsHWvsj7wgjnpzCxk9NRX70806C?usp=drive_link). For a comprehensive log of the loss and weights, please visit [our Weights & Biases dashboard](https://wandb.ai/jaxpi/adv?workspace=user-).
 
 <figure>
 <img src=figures/adv_pred.png style="width:100%">

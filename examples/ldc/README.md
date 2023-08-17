@@ -44,7 +44,8 @@ For the final Re=1000, we perform an ablation study on **Algorithm 1**. Table be
 
 ### State of the art
 
-Taken all together, we present our results for Re=3200.
+Taken all together, we present our results for Re=3200. The model parameter can be found at [google drive link](https://drive.google.com/drive/folders/14bUqullVYHhb68kdwK_lkhzjtvF74nQl?usp=drive_link).
+For a comprehensive log of the loss and weights, please visit [our Weights & Biases dashboard](https://wandb.ai/jaxpi/ldc?workspace=user-).
 
 <figure>
 <img src=figures/ldc_pred.png style="width:100%">
