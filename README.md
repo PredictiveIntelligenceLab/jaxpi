@@ -101,6 +101,13 @@ its relative $L^2$ error, and links to the corresponding model [checkpoints](htt
 
 ## Citation
 
+    @article{wang2023expert,
+      title={An Expert's Guide to Training Physics-informed Neural Networks},
+      author={Wang, Sifan and Sankaran, Shyam and Wang, Hanwen and Perdikaris, Paris},
+      journal={arXiv preprint arXiv:2308.08468},
+      year={2023}
+    }
+
 
 
 
