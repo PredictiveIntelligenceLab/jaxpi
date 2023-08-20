@@ -12,7 +12,7 @@ This repository is a comprehensive implementation of physics-informed neural net
 - [Characterizing Possible Failure Modes in Physics-Informed Neural Networks](https://arxiv.org/abs/2109.01050)
 
 
-This  repository also releases an extensive range of benchmarking examples, showcasing the effectiveness and robustness of our implemention.
+This  repository also releases an extensive range of benchmarking examples, showcasing the effectiveness and robustness of our implementation.
 Our implementation supports both **single** and **multi-GPU** training, while evaluation is currently limited to
 single-GPU setups.
 
