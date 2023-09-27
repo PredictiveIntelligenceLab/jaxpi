@@ -23,9 +23,9 @@ Our code is GPU-only.
 We highly recommend using the most recent versions of JAX and JAX-lib, along with compatible CUDA and cuDNN versions.
 The code has been tested and confirmed to work with the following versions:
 
-- JAX 0.4.5
-- CUDA 11.7
-- cuDNN 8.2
+- JAX 0.4.18
+- CUDA 12.1
+- cuDNN 8.9
 
 
 Install JAX-PI with the following commands:
