@@ -23,7 +23,7 @@ Our code is GPU-only.
 We highly recommend using the most recent versions of JAX and JAX-lib, along with compatible CUDA and cuDNN versions.
 The code has been tested and confirmed to work with the following versions:
 
-- JAX 0.4.18
+- JAX 0.4.16
 - CUDA 12.1
 - cuDNN 8.9
 
