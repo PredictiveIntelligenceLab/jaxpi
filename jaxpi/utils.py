@@ -45,5 +45,7 @@ def save_checkpoint(state, workdir, keep=5, name=None):
 
 
 def restore_checkpoint(state, workdir, step=None):
+    # TODO: add a check to explicitly check if the state is sharded.
+    state = jax.tree_map(lambda x: x[0], state)
     state = checkpoints.restore_checkpoint(workdir, state, step=step)
     return state
