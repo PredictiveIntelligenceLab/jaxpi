@@ -129,7 +129,7 @@ class Dense(nn.Module):
 class Mlp(nn.Module):
     arch_name: Optional[str] = "Mlp"
     num_layers: int = 4
-    layer_size: int = 256
+    hidden_dim: int = 256
     out_dim: int = 1
     activation: str = "tanh"
     periodicity: Union[None, Dict] = None
@@ -148,7 +148,7 @@ class Mlp(nn.Module):
             x = FourierEmbs(**self.fourier_emb)(x)
 
         for _ in range(self.num_layers):
-            x = Dense(features=self.layer_size, reparam=self.reparam)(x)
+            x = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
             x = self.activation_fn(x)
 
         x = Dense(features=self.out_dim, reparam=self.reparam)(x)
@@ -158,7 +158,7 @@ class Mlp(nn.Module):
 class ModifiedMlp(nn.Module):
     arch_name: Optional[str] = "ModifiedMlp"
     num_layers: int = 4
-    layer_size: int = 256
+    hidden_dim: int = 256
     out_dim: int = 1
     activation: str = "tanh"
     periodicity: Union[None, Dict] = None
@@ -176,14 +176,14 @@ class ModifiedMlp(nn.Module):
         if self.fourier_emb:
             x = FourierEmbs(**self.fourier_emb)(x)
 
-        u = Dense(features=self.layer_size, reparam=self.reparam)(x)
-        v = Dense(features=self.layer_size, reparam=self.reparam)(x)
+        u = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
+        v = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
 
         u = self.activation_fn(u)
         v = self.activation_fn(v)
 
         for _ in range(self.num_layers):
-            x = Dense(features=self.layer_size, reparam=self.reparam)(x)
+            x = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
             x = self.activation_fn(x)
             x = x * u + (1 - x) * v
 
@@ -193,7 +193,7 @@ class ModifiedMlp(nn.Module):
 
 class MlpBlock(nn.Module):
     num_layers: int
-    layer_size: int
+    hidden_dim: int
     out_dim: int
     activation: str
     reparam: Union[None, Dict]
@@ -205,7 +205,7 @@ class MlpBlock(nn.Module):
     @nn.compact
     def __call__(self, x):
         for _ in range(self.num_layers):
-            x = Dense(features=self.layer_size, reparam=self.reparam)(x)
+            x = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
             x = self.activation_fn(x)
 
         x = Dense(features=self.out_dim, reparam=self.reparam)(x)
@@ -219,7 +219,7 @@ class DeepONet(nn.Module):
     arch_name: Optional[str] = "DeepONet"
     num_branch_layers: int = 4
     num_trunk_layers: int = 4
-    layer_size: int = 256
+    hidden_dim: int = 256
     out_dim: int = 1
     activation: str = "tanh"
     periodicity: Union[None, Dict] = None
@@ -233,8 +233,8 @@ class DeepONet(nn.Module):
     def __call__(self, u, x):
         u = MlpBlock(
             num_layers=num_branch_layers,
-            layer_size=self.layer_size,
-            out_dim=self.layer_size,
+            hidden_dim=self.hidden_dim,
+            out_dim=self.hidden_dim,
             activation=self.activation,
             final_activation=False,
             reparam=self.reparam,
@@ -242,8 +242,8 @@ class DeepONet(nn.Module):
 
         x = Mlp(
             num_layers=num_trunk_layers,
-            layer_size=self.layer_size,
-            out_dim=self.layer_size,
+            hidden_dim=self.hidden_dim,
+            out_dim=self.hidden_dim,
             activation=self.activation,
             periodicity=self.periodicity,
             fourier_emb=self.fourier_emb,

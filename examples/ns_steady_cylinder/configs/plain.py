@@ -22,7 +22,7 @@ def get_config():
     config.arch = arch = ml_collections.ConfigDict()
     arch.arch_name = "Mlp"
     arch.num_layers = 4
-    arch.layer_size = 128
+    arch.hidden_dim = 128
     arch.out_dim = 3
     arch.activation = "gelu"  # gelu works better than tanh
     arch.periodicity = False

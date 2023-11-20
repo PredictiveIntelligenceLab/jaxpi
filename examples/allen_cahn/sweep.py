@@ -38,7 +38,7 @@ def main(argv):
 
     parameters_dict = {
         "arch_name": {"values": ["Mlp", "ModifiedMlp"]},
-        "layer_size": {"values": [256, 512]},
+        "hidden_dim": {"values": [256, 512]},
         "num_layers": {"values": [3, 4, 5]},
         "activation": {"values": ["tanh", "gelu"]},
         "arch_reparam": {
@@ -63,7 +63,7 @@ def main(argv):
 
         # Update config with sweep parameters
         config.arch.arch_name = sweep_config.arch_name
-        config.arch.layer_size = sweep_config.layer_size
+        config.arch.hidden_dim = sweep_config.hidden_dim
         config.arch.num_layers = sweep_config.num_layers
         config.arch.activation = sweep_config.activation
         config.arch.reparam = sweep_config.arch_reparam
