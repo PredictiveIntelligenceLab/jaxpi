@@ -232,7 +232,7 @@ class DeepONet(nn.Module):
     @nn.compact
     def __call__(self, u, x):
         u = MlpBlock(
-            num_layers=num_branch_layers,
+            num_layers=self.num_branch_layers,
             hidden_dim=self.hidden_dim,
             out_dim=self.hidden_dim,
             activation=self.activation,
@@ -241,7 +241,7 @@ class DeepONet(nn.Module):
         )(u)
 
         x = Mlp(
-            num_layers=num_trunk_layers,
+            num_layers=self.num_trunk_layers,
             hidden_dim=self.hidden_dim,
             out_dim=self.hidden_dim,
             activation=self.activation,
