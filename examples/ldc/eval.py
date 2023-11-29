@@ -1,6 +1,7 @@
 import os
 
 import jax.numpy as jnp
+from jax import vmap
 
 import scipy.io
 import ml_collections
