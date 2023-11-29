@@ -59,7 +59,7 @@ def train_one_window(config, workdir, model, res_sampler, u_ref, idx):
                     workdir, "ckpt", config.wandb.name, "time_window_{}".format(idx + 1)
                 )
                 state = jax.device_get(jax.tree_util.tree_map(lambda x: x[0], model.state))
-                save_checkpoint(state, path, keep=config.saving.num_keep_ckpts)
+                save_checkpoint(model.state, path, keep=config.saving.num_keep_ckpts)
 
     return model
 
