@@ -331,10 +331,10 @@ v_Ghia = {
 def evaluate(config: ml_collections.ConfigDict, workdir: str, Re: int):
     Re = 5000
     # Load dataset
-    u_ref, v_ref, p_ref, p_x_ref, p_y_ref, x_star, y_star, nu = get_dataset(Re)
+    u_ref, v_ref, x_star, y_star, nu = get_dataset(Re)
 
     # Initialize model
-    model = models.NavierStokes2D(config, p_x_ref, p_y_ref, x_star, y_star, nu)
+    model = models.NavierStokes2D(config)
 
     # Restore checkpoint
     path = os.path.join(".", "ckpt", config.wandb.name, "Re{}".format(Re))
