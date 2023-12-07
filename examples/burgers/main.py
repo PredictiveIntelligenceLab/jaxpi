@@ -15,7 +15,6 @@ import jax
 import train
 import eval
 
-jax.config.update("jax_enable_x64", True)
 
 FLAGS = flags.FLAGS
 
@@ -27,8 +26,6 @@ config_flags.DEFINE_config_file(
     "File path to the training hyperparameter configuration.",
     lock_config=True,
 )
-
-
 
 
 def main(argv):
