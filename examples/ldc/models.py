@@ -60,14 +60,14 @@ class NavierStokes2D(ForwardBVP):
 
         (u_x, u_y), (v_x, v_y), (p_x, p_y) = jacrev(self.neural_net, argnums=(1, 2))(params, x, y)
 
-        hessian_u = hessian(self.u_net, argnums=(1, 2))(params, x, y)
-        hessian_v = hessian(self.v_net, argnums=(1, 2))(params, x, y)
+        u_hessian = hessian(self.u_net, argnums=(1, 2))(params, x, y)
+        v_hessian = hessian(self.v_net, argnums=(1, 2))(params, x, y)
 
-        u_xx = hessian_u[0][0]
-        u_yy = hessian_u[1][1]
+        u_xx = u_hessian[0][0]
+        u_yy = u_hessian[1][1]
 
-        v_xx = hessian_v[0][0]
-        v_yy = hessian_v[1][1]
+        v_xx = v_hessian[0][0]
+        v_yy = v_hessian[1][1]
 
         ru = u * u_x + v * u_y + p_x - nu * (u_xx + u_yy)
         rv = u * v_x + v * v_y + p_y - nu * (v_xx + v_yy)
