@@ -2,7 +2,7 @@ from functools import partial
 
 import jax
 import jax.numpy as jnp
-from jax import lax, jit, grad, vmap
+from jax import lax, jit, grad, vmap, jacrev, hessian
 from jax.tree_util import tree_map
 
 import optax
@@ -80,12 +80,12 @@ class NavierStokes(ForwardIVP):
         u_x = grad(self.u_net, argnums=2)(params, t, x, y)
         v_y = grad(self.v_net, argnums=3)(params, t, x, y)
 
-        w_t = grad(self.w_net, argnums=1)(params, t, x, y)
-        w_x = grad(self.w_net, argnums=2)(params, t, x, y)
-        w_y = grad(self.w_net, argnums=3)(params, t, x, y)
+        w_t, w_x, w_y = jacrev(self.w_net, argnums=(1, 2, 3))(params, t, x, y)
 
-        w_xx = grad(grad(self.w_net, argnums=2), argnums=2)(params, t, x, y)
-        w_yy = grad(grad(self.w_net, argnums=3), argnums=3)(params, t, x, y)
+        w_hessian = hessian(self.w_net, argnums=(2, 3))(params, t, x, y)
+
+        w_xx = w_hessian[0][0]
+        w_yy = w_hessian[1][1]
 
         mom = w_t + u * w_x + v * w_y - self.nu * (w_xx + w_yy)
         cont = u_x + v_y
