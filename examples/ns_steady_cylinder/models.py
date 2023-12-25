@@ -1,7 +1,7 @@
 from functools import partial
 
 import jax.numpy as jnp
-from jax import lax, jit, grad, vmap, pmap, jacrev
+from jax import lax, jit, grad, vmap, pmap, jacrev, hessian
 from jax.tree_util import tree_map
 from jax.flatten_util import ravel_pytree
 
@@ -67,19 +67,16 @@ class NavierStokes2D(ForwardBVP):
     def r_net(self, params, x, y):
         u, v, p = self.neural_net(params, x, y)
 
-        u_x = grad(self.u_net, argnums=1)(params, x, y)
-        v_x = grad(self.v_net, argnums=1)(params, x, y)
-        p_x = grad(self.p_net, argnums=1)(params, x, y)
+        (u_x, u_y), (v_x, v_y), (p_x, p_y) = jacrev(self.neural_net, argnums=(1, 2))(params, x, y)
 
-        u_y = grad(self.u_net, argnums=2)(params, x, y)
-        v_y = grad(self.v_net, argnums=2)(params, x, y)
-        p_y = grad(self.p_net, argnums=2)(params, x, y)
+        u_hessian = hessian(self.u_net, argnums=(1, 2))(params, x, y)
+        v_hessian = hessian(self.v_net, argnums=(1, 2))(params, x, y)
 
-        u_xx = grad(grad(self.u_net, argnums=1), argnums=1)(params, x, y)
-        v_xx = grad(grad(self.v_net, argnums=1), argnums=1)(params, x, y)
+        u_xx = u_hessian[0][0]
+        u_yy = u_hessian[1][1]
 
-        u_yy = grad(grad(self.u_net, argnums=2), argnums=2)(params, x, y)
-        v_yy = grad(grad(self.v_net, argnums=2), argnums=2)(params, x, y)
+        v_xx = v_hessian[0][0]
+        v_yy = v_hessian[1][1]
 
         # PDE residual
         ru = u * u_x + v * u_y + p_x - (u_xx + u_yy) / self.Re
