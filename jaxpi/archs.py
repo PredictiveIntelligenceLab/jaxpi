@@ -1,9 +1,11 @@
 from functools import partial
 from typing import Any, Callable, Sequence, Tuple, Optional, Union, Dict
 
+
 from flax import linen as nn
 from flax.core.frozen_dict import freeze
 
+import jax
 from jax import random, jit, vmap
 import jax.numpy as jnp
 from jax.nn.initializers import glorot_normal, normal, zeros, constant
@@ -91,6 +93,21 @@ class FourierEmbs(nn.Module):
         return y
 
 
+class Embedding(nn.Module):
+    periodicity: Union[None, Dict] = None
+    fourier_emb: Union[None, Dict] = None
+
+    @nn.compact
+    def __call__(self, x):
+        if self.periodicity:
+            x = PeriodEmbs(**self.periodicity)(x)
+
+        if self.fourier_emb:
+            x = FourierEmbs(**self.fourier_emb)(x)
+
+        return x
+
+
 class Dense(nn.Module):
     features: int
     kernel_init: Callable = glorot_normal()
@@ -123,9 +140,6 @@ class Dense(nn.Module):
         return y
 
 
-# TODO: Make it more general, e.g. imposing periodicity for the given axis
-
-
 class Mlp(nn.Module):
     arch_name: Optional[str] = "Mlp"
     num_layers: int = 4
@@ -135,24 +149,239 @@ class Mlp(nn.Module):
     periodicity: Union[None, Dict] = None
     fourier_emb: Union[None, Dict] = None
     reparam: Union[None, Dict] = None
+    pi_init: Union[None, jnp.ndarray] = None
 
     def setup(self):
         self.activation_fn = _get_activation(self.activation)
 
     @nn.compact
     def __call__(self, x):
-        if self.periodicity:
-            x = PeriodEmbs(**self.periodicity)(x)
-
-        if self.fourier_emb:
-            x = FourierEmbs(**self.fourier_emb)(x)
+        x = Embedding(periodicity=self.periodicity, fourier_emb=self.fourier_emb)(x)
 
         for _ in range(self.num_layers):
             x = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
             x = self.activation_fn(x)
 
-        x = Dense(features=self.out_dim, reparam=self.reparam)(x)
+        if self.pi_init is not None:
+            kernel = self.param("pi_init", constant(self.pi_init), self.pi_init.shape)
+            y = jnp.dot(x, kernel)
+
+        else:
+            y = Dense(features=self.out_dim, reparam=self.reparam)(x)
+
+        return x, y
+
+
+class Bottleneck(nn.Module):
+    hidden_dim: int
+    output_dim: int
+    activation: str
+    reparam: Union[None, Dict]
+
+    def setup(self):
+        self.activation_fn = _get_activation(self.activation)
+
+    @nn.compact
+    def __call__(self, x):
+        identity = x
+
+        x = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
+        x = self.activation_fn(x)
+
+        x = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
+        x = self.activation_fn(x)
+
+        x = Dense(features=self.output_dim, reparam=self.reparam)(x)
+
+        x = (
+            x + identity
+        )  # Please note that the skip connection is added before the activation function, which is the same as the original ResNet
+
+        x = self.activation_fn(x)
+
         return x
+
+
+class PIBottleneck(nn.Module):
+    hidden_dim: int
+    output_dim: int
+    activation: str
+    nonlinearity: float
+    reparam: Union[None, Dict]
+
+    def setup(self):
+        self.activation_fn = _get_activation(self.activation)
+
+    @nn.compact
+    def __call__(self, x):
+        """
+        Physics-informed bottleneck block: Add the skip connection after the activation function,
+        which is different from the original ResNet, making it an identity mapping at initialization
+        """
+        identity = x
+
+        x = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
+        x = self.activation_fn(x)
+
+        x = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
+        x = self.activation_fn(x)
+
+        x = Dense(features=self.output_dim, reparam=self.reparam)(x)
+        x = self.activation_fn(x)
+
+        alpha = self.param("alpha", constant(self.nonlinearity), (1,))
+        # alpha = jnp.exp(-alpha)
+
+        x = alpha * x + (1 - alpha) * identity
+
+        return x
+
+
+class PIModifiedBottleneck(nn.Module):
+    hidden_dim: int
+    output_dim: int
+    activation: str
+    nonlinearity: float
+    reparam: Union[None, Dict]
+
+    def setup(self):
+        self.activation_fn = _get_activation(self.activation)
+
+    @nn.compact
+    def __call__(self, x, u, v):
+        identity = x
+
+        x = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
+        x = self.activation_fn(x)
+
+        x = x * u + (1 - x) * v
+
+        x = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
+        x = self.activation_fn(x)
+
+        x = x * u + (1 - x) * v
+
+        x = Dense(features=self.output_dim, reparam=self.reparam)(x)
+        x = self.activation_fn(x)
+
+        alpha = self.param("alpha", constant(self.nonlinearity), (1,))
+        x = alpha * x + (1 - alpha) * identity
+
+        return x
+
+
+class ResNet(nn.Module):
+    arch_name: Optional[str] = "ResNet"
+    num_layers: int = 2
+    hidden_dim: int = 256
+    out_dim: int = 1
+    activation: str = "tanh"
+    periodicity: Union[None, Dict] = None
+    fourier_emb: Union[None, Dict] = None
+    reparam: Union[None, Dict] = None
+    pi_init: Union[None, jnp.ndarray] = None
+
+    def setup(self):
+        self.activation_fn = _get_activation(self.activation)
+
+    @nn.compact
+    def __call__(self, x):
+        x = Embedding(periodicity=self.periodicity, fourier_emb=self.fourier_emb)(x)
+
+        for _ in range(self.num_layers):
+            x = Bottleneck(
+                hidden_dim=self.hidden_dim,
+                output_dim=x.shape[-1],
+                activation=self.activation,
+                reparam=self.reparam,
+            )(x)
+
+        y = Dense(features=self.out_dim, reparam=self.reparam)(x)
+
+        return x, y
+
+
+class PIResNet(nn.Module):
+    arch_name: Optional[str] = "PIResNet"
+    num_layers: int = 2
+    hidden_dim: int = 256
+    out_dim: int = 1
+    activation: str = "tanh"
+    nonlinearity: float = 0.0
+    periodicity: Union[None, Dict] = None
+    fourier_emb: Union[None, Dict] = None
+    reparam: Union[None, Dict] = None
+    pi_init: Union[None, jnp.ndarray] = None
+
+    def setup(self):
+        self.activation_fn = _get_activation(self.activation)
+
+    @nn.compact
+    def __call__(self, x):
+        x = Embedding(periodicity=self.periodicity, fourier_emb=self.fourier_emb)(x)
+
+        for _ in range(self.num_layers):
+            x = PIBottleneck(
+                hidden_dim=self.hidden_dim,
+                output_dim=x.shape[-1],
+                activation=self.activation,
+                nonlinearity=self.nonlinearity,
+                reparam=self.reparam,
+            )(x)
+
+        if self.pi_init is not None:
+            kernel = self.param("pi_init", constant(self.pi_init), self.pi_init.shape)
+            y = jnp.dot(x, kernel)
+
+        else:
+            y = Dense(features=self.out_dim, reparam=self.reparam)(x)
+
+        return x, y
+
+
+class PirateNet(nn.Module):
+    arch_name: Optional[str] = "PirateNet"
+    num_layers: int = 2
+    hidden_dim: int = 256
+    out_dim: int = 1
+    activation: str = "tanh"
+    nonlinearity: float = 0.0
+    periodicity: Union[None, Dict] = None
+    fourier_emb: Union[None, Dict] = None
+    reparam: Union[None, Dict] = None
+    pi_init: Union[None, jnp.ndarray] = None
+
+    def setup(self):
+        self.activation_fn = _get_activation(self.activation)
+
+    @nn.compact
+    def __call__(self, x):
+        embs = Embedding(periodicity=self.periodicity, fourier_emb=self.fourier_emb)(x)
+        x = embs
+
+        u = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
+        u = self.activation_fn(u)
+
+        v = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
+        v = self.activation_fn(v)
+
+        for _ in range(self.num_layers):
+            x = PIModifiedBottleneck(
+                hidden_dim=self.hidden_dim,
+                output_dim=x.shape[-1],
+                activation=self.activation,
+                nonlinearity=self.nonlinearity,
+                reparam=self.reparam,
+            )(x, u, v)
+
+        if self.pi_init is not None:
+            kernel = self.param("pi_init", constant(self.pi_init), self.pi_init.shape)
+            y = jnp.dot(x, kernel)
+
+        else:
+            y = Dense(features=self.out_dim, reparam=self.reparam)(x)
+
+        return x, y
 
 
 class ModifiedMlp(nn.Module):
@@ -164,17 +393,14 @@ class ModifiedMlp(nn.Module):
     periodicity: Union[None, Dict] = None
     fourier_emb: Union[None, Dict] = None
     reparam: Union[None, Dict] = None
+    pi_init: Union[None, jnp.ndarray] = None
 
     def setup(self):
         self.activation_fn = _get_activation(self.activation)
 
     @nn.compact
     def __call__(self, x):
-        if self.periodicity:
-            x = PeriodEmbs(**self.periodicity)(x)
-
-        if self.fourier_emb:
-            x = FourierEmbs(**self.fourier_emb)(x)
+        x = Embedding(periodicity=self.periodicity, fourier_emb=self.fourier_emb)(x)
 
         u = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
         v = Dense(features=self.hidden_dim, reparam=self.reparam)(x)
@@ -187,9 +413,19 @@ class ModifiedMlp(nn.Module):
             x = self.activation_fn(x)
             x = x * u + (1 - x) * v
 
-        x = Dense(features=self.out_dim, reparam=self.reparam)(x)
-        return x
+        if self.pi_init is not None:
+            kernel = self.param("pi_init", constant(self.pi_init), self.pi_init.shape)
+            y = jnp.dot(x, kernel)
 
+        else:
+            y = Dense(features=self.out_dim, reparam=self.reparam)(x)
+
+        return x, y
+
+
+#################################################################################################
+#################################### neural operators ###########################################
+#################################################################################################
 
 class MlpBlock(nn.Module):
     num_layers: int

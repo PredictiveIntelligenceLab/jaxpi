@@ -1,4 +1,5 @@
 import os
+import json
 
 from functools import partial
 
@@ -60,3 +61,28 @@ def restore_checkpoint(state, workdir, step=None):
     )
     state = checkpoints.restore_checkpoint(workdir, state, step=step)
     return state
+
+
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        # Custom serialization for JAX numpy arrays
+        if isinstance(obj, jnp.ndarray):
+            return obj.tolist()  # Convert JAX numpy array to a list
+        # Let the base class default method raise the TypeError
+        return json.JSONEncoder.default(self, obj)
+
+
+def save_config(config, workdir, name=None):
+    # Create the workdir if it doesn't exist.
+    if not os.path.isdir(workdir):
+        os.makedirs(workdir)
+
+    # Set default name if not provided
+    if name is None:
+        name = "config"
+    # Correctly append the '.json' extension to the filename
+    config_path = os.path.join(workdir, name + ".json")
+
+    # Write the config to a JSON file
+    with open(config_path, "w") as config_file:
+        json.dump(config.to_dict(), config_file, cls=CustomJSONEncoder, indent=4)

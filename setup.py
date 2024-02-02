@@ -10,7 +10,7 @@ except IOError:
 
 setup(
     name="jaxpi",
-    version="0.0.1",
+    version="0.0.2",
     url="https://github.com/PredictiveIntelligenceLab/JAX-PI",
     author="Sifan Wang, Shyam Sankaran, Hanwen Wang",
     packages=find_packages(),

@@ -45,8 +45,17 @@ def _create_arch(config):
     if config.arch_name == "Mlp":
         arch = archs.Mlp(**config)
 
+    elif config.arch_name == "ResNet":
+        arch = archs.ResNet(**config)
+
     elif config.arch_name == "ModifiedMlp":
         arch = archs.ModifiedMlp(**config)
+
+    elif config.arch_name == "PIResNet":
+        arch = archs.PIResNet(**config)
+
+    elif config.arch_name == "PirateNet":
+        arch = archs.PirateNet(**config)
 
     elif config.arch_name == "DeepONet":
         arch = archs.DeepONet(**config)
@@ -63,7 +72,18 @@ def _create_optimizer(config):
             init_value=config.learning_rate,
             transition_steps=config.decay_steps,
             decay_rate=config.decay_rate,
+            staircase=config.staircase,
         )
+
+        if config.warmup_steps > 0:
+            warmup = optax.linear_schedule(
+                init_value=0.0,
+                end_value=config.learning_rate,
+                transition_steps=config.warmup_steps,
+            )
+
+            lr = optax.join_schedules([warmup, lr], [config.warmup_steps])
+
         tx = optax.adam(
             learning_rate=lr, b1=config.beta1, b2=config.beta2, eps=config.eps
         )
@@ -78,23 +98,25 @@ def _create_optimizer(config):
     return tx
 
 
-def _create_train_state(config):
+def _create_train_state(config, params=None, weights=None):
     # Initialize network
     arch = _create_arch(config.arch)
     x = jnp.ones(config.input_dim)
-    params = arch.init(random.PRNGKey(config.seed), x)
 
     # Initialize optax optimizer
     tx = _create_optimizer(config.optim)
 
-    # Convert config dict to dict
-    init_weights = dict(config.weighting.init_weights)
+    if params is None:
+        params = arch.init(random.PRNGKey(config.seed), x)
+
+    if weights is None:
+        weights = dict(config.weighting.init_weights)
 
     state = TrainState.create(
         apply_fn=arch.apply,
         params=params,
         tx=tx,
-        weights=init_weights,
+        weights=weights,
         momentum=config.weighting.momentum,
     )
 
@@ -143,7 +165,9 @@ class PINN:
             # Compute the mean of grad norms over all losses
             mean_grad_norm = jnp.mean(jnp.stack(tree_leaves(grad_norm_dict)))
             # Grad Norm Weighting
-            w = tree_map(lambda x: (mean_grad_norm / x), grad_norm_dict)
+            w = tree_map(
+                lambda x: (mean_grad_norm / (x + 1e-5 * mean_grad_norm)), grad_norm_dict
+            )
 
         elif self.config.weighting.scheme == "ntk":
             # Compute the diagonal of the NTK of each loss
@@ -155,7 +179,7 @@ class PINN:
             # Compute the average over all ntk means
             mean_ntk = jnp.mean(jnp.stack(tree_leaves(mean_ntk_dict)))
             # NTK Weighting
-            w = tree_map(lambda x: (mean_ntk / x), mean_ntk_dict)
+            w = tree_map(lambda x: (mean_ntk / (x + 1e-5 * mean_ntk)), mean_ntk_dict)
 
         return w
 
