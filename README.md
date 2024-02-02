@@ -16,6 +16,12 @@ This  repository also releases an extensive range of benchmarking examples, show
 Our implementation supports both **single** and **multi-GPU** training, while evaluation is currently limited to
 single-GPU setups.
 
+
+## What's new
+
+
+
+
 ## Installation
 
 Ensure that you have Python 3.8 or later installed on your system.

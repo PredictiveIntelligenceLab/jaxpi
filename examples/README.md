@@ -6,10 +6,9 @@ This makes every example a bit more verbose, but once you know one example, you 
 
 ## Content
 
+- [Regression](./regression)
 - [Allen-Canh equation](./allen_cahn)
-- [Advection equation](./adv)
-- [Stokes flow](./stokes_cylinder)
-- [Kuramoto–Sivashinsky equation](./ks_chaotic)
+- [Advection equation](./kdv)
 - [Lid-driven cavity flow](./ldc)
-- [Navier–Stokes flow in tori](./ns_tori)
-- [Navier–Stokes flow around a cylinder](./ns_unsteady_cylinder)
+- [Grey-Scott equation](./grey_scott)
+- [Ginzburg-Landu equation](./ginzburg_landau)
