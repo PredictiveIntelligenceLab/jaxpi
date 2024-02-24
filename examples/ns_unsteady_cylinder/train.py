@@ -174,6 +174,7 @@ def train_and_evaluate(config: ml_collections.ConfigDict, workdir: str):
         cyl_coords,
         nu,
     ) = get_dataset()
+
     (
         fine_coords,
         fine_coords_near_cyl,

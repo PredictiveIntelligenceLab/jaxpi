@@ -18,7 +18,10 @@ import wandb
 
 import models
 
+
 from jaxpi.utils import restore_checkpoint
+
+from utils import get_dataset
 
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
@@ -44,17 +47,18 @@ def evaluate(config: ml_collections.ConfigDict, workdir: str):
         nu,
     ) = get_dataset()
 
-    U_max = 0.3  # maximum velocity
-    u_inflow, _ = parabolic_inflow(inflow_coords[:, 1], U_max)
+    T = 1.0  # final time
 
     # Nondimensionalization
     if config.nondim == True:
         # Nondimensionalization parameters
-        U_star = 0.2  # characteristic velocity
+        U_star = 1.0  # characteristic velocity
         L_star = 0.1  # characteristic length
+        T_star = L_star / U_star  # characteristic time
         Re = U_star * L_star / nu
 
         # Nondimensionalize coordinates and inflow velocity
+        T = T / T_star
         inflow_coords = inflow_coords / L_star
         outflow_coords = outflow_coords / L_star
         wall_coords = wall_coords / L_star
@@ -62,23 +66,26 @@ def evaluate(config: ml_collections.ConfigDict, workdir: str):
         coords = coords / L_star
 
         # Nondimensionalize flow field
-        u_inflow = u_inflow / U_star
+        # u_inflow = u_inflow / U_star
         u_ref = u_ref / U_star
         v_ref = v_ref / U_star
+        p_ref = p_ref / U_star ** 2
 
     else:
         Re = nu
 
+    # Inflow boundary conditions
+    U_max = 1.5  # maximum velocity
+    inflow_fn = lambda y: parabolic_inflow(y * L_star, U_max)
+
+    # Temporal domain of each time window
+    t0 = 0.0
+    t1 = 1.0
+
+    temporal_dom = jnp.array([t0, t1 * (1 + 0.05)]) # Must be same as the one used in training
+
     # Initialize model
-    model = models.NavierStokes2D(
-        config,
-        u_inflow,
-        inflow_coords,
-        outflow_coords,
-        wall_coords,
-        cylinder_coords,
-        Re,
-    )
+    model = models.NavierStokes2D(config, inflow_fn, temporal_dom, coords, Re)
 
     # Restore checkpoint
     ckpt_path = os.path.join(".", "ckpt", config.wandb.name)
@@ -86,20 +93,42 @@ def evaluate(config: ml_collections.ConfigDict, workdir: str):
     params = model.state.params
 
     # Predict
-    u_pred = model.u_pred_fn(params, coords[:, 0], coords[:, 1])
-    v_pred = model.v_pred_fn(params, coords[:, 0], coords[:, 1])
+    u_pred_fn = jit(vmap(vmap(model.u_net, (None, None, 0, 0)), (None, 0, None, None)))
+    v_pred_fn = jit(vmap(vmap(model.v_net, (None, None, 0, 0)), (None, 0, None, None)))
+    p_pred_fn = jit(vmap(vmap(model.p_net, (None, None, 0, 0)), (None, 0, None, None)))
+    w_pred_fn = jit(vmap(vmap(model.w_net, (None, None, 0, 0)), (None, 0, None, None)))
 
-    u_error = jnp.sqrt(jnp.mean((u_ref - u_pred) ** 2)) / jnp.sqrt(jnp.mean(u_ref**2))
-    v_error = jnp.sqrt(jnp.mean((v_ref - v_pred) ** 2)) / jnp.sqrt(jnp.mean(v_ref**2))
+    t_coords = jnp.linspace(0, t1, 20)[:-1]
 
-    print("l2_error of u: {:.4e}".format(u_error))
-    print("l2_error of v: {:.4e}".format(v_error))
+    u_pred_list = []
+    v_pred_list = []
+    p_pred_list = []
+    w_pred_list = []
+    U_pred_list = []
 
-    # Plot
-    # Save dir
-    save_dir = os.path.join(workdir, "figures", config.wandb.name)
-    if not os.path.isdir(save_dir):
-        os.makedirs(save_dir)
+    for idx in range(9):
+        # Restore the checkpoint
+        ckpt_path = os.path.join('.', 'ckpt', config.wandb.name, 'time_window_{}'.format(idx + 1))
+        model.state = restore_checkpoint(model.state, ckpt_path)
+        params = model.state.params
+
+        u_pred = u_pred_fn(params, t_coords, coords[:, 0], coords[:, 1])
+        v_pred = v_pred_fn(params, t_coords, coords[:, 0], coords[:, 1])
+        w_pred = w_pred_fn(params, t_coords, coords[:, 0], coords[:, 1])
+        p_pred = p_pred_fn(params, t_coords, coords[:, 0], coords[:, 1])
+
+        u_pred_list.append(u_pred)
+        v_pred_list.append(v_pred)
+        w_pred_list.append(w_pred)
+        p_pred_list.append(p_pred)
+
+    u_pred = jnp.concatenate(u_pred_list, axis=0)
+    v_pred = jnp.concatenate(v_pred_list, axis=0)
+    p_pred = jnp.concatenate(p_pred_list, axis=0)
+    w_pred = jnp.concatenate(w_pred_list, axis=0)
+
+
+    # Dimensionalize coordinates and flow field
 
     if config.nondim == True:
         # Dimensionalize coordinates and flow field
@@ -111,7 +140,6 @@ def evaluate(config: ml_collections.ConfigDict, workdir: str):
         u_pred = u_pred * U_star
         v_pred = v_pred * U_star
 
-    # Triangulation
     x = coords[:, 0]
     y = coords[:, 1]
     triang = tri.Triangulation(x, y)
@@ -125,58 +153,32 @@ def evaluate(config: ml_collections.ConfigDict, workdir: str):
     dist_from_center = jnp.sqrt((x_tri - center[0]) ** 2 + (y_tri - center[1]) ** 2)
     triang.set_mask(dist_from_center < radius)
 
+
+    # Plot
+    # Save dir
+    save_dir = os.path.join(workdir, "figures", config.wandb.name)
+    if not os.path.isdir(save_dir):
+        os.makedirs(save_dir)
+
     fig1 = plt.figure(figsize=(18, 12))
     plt.subplot(3, 1, 1)
-    plt.tricontourf(triang, u_ref, cmap="jet", levels=100)
+    plt.tricontourf(triang, u_pred[-1], cmap='jet', levels=100)
     plt.colorbar()
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.title("Exact")
+    plt.title('Predicted $u$')
     plt.tight_layout()
 
     plt.subplot(3, 1, 2)
-    plt.tricontourf(triang, u_pred, cmap="jet", levels=100)
+    plt.tricontourf(triang, v_pred[-1], cmap='jet', levels=100)
     plt.colorbar()
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.title("Predicted u(x, y)")
+    plt.title('Predicted $v$')
     plt.tight_layout()
 
     plt.subplot(3, 1, 3)
-    plt.tricontourf(triang, jnp.abs(u_ref - u_pred), cmap="jet", levels=100)
+    plt.tricontourf(triang, p_pred[-1], cmap='jet', levels=100)
     plt.colorbar()
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.title("Absolute error")
+    plt.title('Predicted $p$')
     plt.tight_layout()
+    plt.show()
 
-    save_path = os.path.join(save_dir, "ns_steady_u.pdf")
+    save_path = os.path.join(save_dir, "ns_unsteady_u.pdf")
     fig1.savefig(save_path, bbox_inches="tight", dpi=300)
-
-    fig2 = plt.figure(figsize=(18, 12))
-    plt.subplot(3, 1, 1)
-    plt.tricontourf(triang, v_ref, cmap="jet", levels=100)
-    plt.colorbar()
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.title("Exact")
-    plt.tight_layout()
-
-    plt.subplot(3, 1, 2)
-    plt.tricontourf(triang, v_pred, cmap="jet", levels=100)
-    plt.colorbar()
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.title("Predicted u(x, y)")
-    plt.tight_layout()
-
-    plt.subplot(3, 1, 3)
-    plt.tricontourf(triang, jnp.abs(v_ref - v_pred), cmap="jet", levels=100)
-    plt.colorbar()
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.title("Absolute error")
-    plt.tight_layout()
-
-    save_path = os.path.join(save_dir, "ns_steady_v.pdf")
-    fig2.savefig(save_path, bbox_inches="tight", dpi=300)
