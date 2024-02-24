@@ -21,16 +21,10 @@ import models
 
 from jaxpi.utils import restore_checkpoint
 
-from utils import get_dataset
+from utils import get_dataset, parabolic_inflow
 
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
-
-
-def parabolic_inflow(y, U_max):
-    u = 4 * U_max * y * (0.41 - y) / (0.41**2)
-    v = jnp.zeros_like(y)
-    return u, v
 
 
 def evaluate(config: ml_collections.ConfigDict, workdir: str):
