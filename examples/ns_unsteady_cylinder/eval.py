@@ -100,7 +100,7 @@ def evaluate(config: ml_collections.ConfigDict, workdir: str):
     w_pred_list = []
     U_pred_list = []
 
-    for idx in range(9):
+    for idx in range(config.training.num_time_windows):
         # Restore the checkpoint
         ckpt_path = os.path.join('.', 'ckpt', config.wandb.name, 'time_window_{}'.format(idx + 1))
         model.state = restore_checkpoint(model.state, ckpt_path)
@@ -121,9 +121,7 @@ def evaluate(config: ml_collections.ConfigDict, workdir: str):
     p_pred = jnp.concatenate(p_pred_list, axis=0)
     w_pred = jnp.concatenate(w_pred_list, axis=0)
 
-
     # Dimensionalize coordinates and flow field
-
     if config.nondim == True:
         # Dimensionalize coordinates and flow field
         coords = coords * L_star
