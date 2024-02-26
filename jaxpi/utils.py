@@ -56,7 +56,7 @@ def restore_checkpoint(state, workdir, step=None):
 
     # ensuring that we're in a single device setting
     assert isinstance(
-        jax.tree_map(lambda x: x.sharding, jax.tree_leaves(state.params))[0],
+        jax.tree_map(lambda x: jnp.array(x).sharding, jax.tree_leaves(state.params))[0],
         jax.sharding.SingleDeviceSharding,
     )
 
