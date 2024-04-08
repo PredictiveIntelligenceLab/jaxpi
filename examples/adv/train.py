@@ -83,7 +83,7 @@ def train_and_evaluate(config: ml_collections.ConfigDict, workdir: str):
             if (step + 1) % config.saving.save_every_steps == 0 or (
                 step + 1
             ) == config.training.max_steps:
-                path = os.path.join(workdir, "ckpt", config.wandb.name)
-                save_checkpoint(model.state, path, keep=config.saving.num_keep_ckpts)
+                ckpt_path = os.path.join(os.getcwd(), config.wandb.name, "ckpt")
+                save_checkpoint(model.state, ckpt_path, keep=config.saving.num_keep_ckpts)
 
     return model

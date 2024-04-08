@@ -55,10 +55,9 @@ def train_one_window(config, workdir, model, res_sampler, u_ref, idx):
             if (step + 1) % config.saving.save_every_steps == 0 or (
                 step + 1
             ) == config.training.max_steps:
-                path = os.path.join(
-                    workdir, "ckpt", config.wandb.name, "time_window_{}".format(idx + 1)
-                )
-                save_checkpoint(model.state, path, keep=config.saving.num_keep_ckpts)
+                ckpt_path = os.path.join(os.getcwd(), config.wandb.name, "ckpt", "time_window_{}".format(idx + 1))
+                save_checkpoint(model.state, ckpt_path, keep=config.saving.num_keep_ckpts)
+
 
     return model
 
