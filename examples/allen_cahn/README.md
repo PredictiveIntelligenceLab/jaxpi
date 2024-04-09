@@ -26,7 +26,7 @@ For detailed sweep information, please visit [our Weight & Bias dashboard](https
 | ✔ | ❌ | ✔ | ✔ |   $6.62 \times 10^{-3}$   | 16.53 |
 | ✔ | ✔ | ❌ | ✔ |   $7.51 \times 10^{-3}$   | 16.36 |
 | ✔ | ✔ | ✔ | ❌ |   $1.59 \times 10^{-3}$   | 16.11 |
-| ❌ | ❌ | ❌ | ❌ |  $51.74 \times 10^{-1}$   | 12.93 |
+| ❌ | ❌ | ❌ | ❌ |   $5.17 \times 10^{-1}$   | 12.93 |
 
 
 ### State of the Art
