@@ -54,6 +54,13 @@ To train the model, run the following command:
 python3 main.py 
 ```
 
+To customize your experiment configuration, you may want to specify a different config file as follows:
+
+```
+python3 main.py --config=configs/sota.py 
+```
+
+
 Our code automatically supports multi-GPU execution. 
 You can specify the GPUs you want to use with the `CUDA_VISIBLE_DEVICES` environment variable. For example, to use the first two GPUs (0 and 1), use the following command:
 
