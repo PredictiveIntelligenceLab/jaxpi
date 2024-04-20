@@ -129,7 +129,7 @@ its relative $L^2$ error, and links to the corresponding model [checkpoints](htt
       author={Wang, Sifan and Li, Bowen and Chen, Yuhan and Perdikaris, Paris},
       journal={arXiv preprint arXiv:2402.00326},
       year={2024}
-}
+    }
 
 
 
