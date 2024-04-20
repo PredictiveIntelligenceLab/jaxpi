@@ -106,6 +106,14 @@ its relative $L^2$ error, and links to the corresponding model [checkpoints](htt
 
 ![ns_cylinder](examples/ns_unsteady_cylinder/figures/ns_cylinder_w.gif)
 
+### Grey-Scott
+
+![Grey-Scott](examples/grey_scott/figures/gs_animation.gif)
+
+### Ginzburg–Landau
+
+![Ginzburg–Landau](examples/ginzburg_landau/figures/gl_animation.gif)
+
 
 ## Citation
 
