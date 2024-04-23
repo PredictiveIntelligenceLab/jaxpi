@@ -116,9 +116,8 @@ def train_one_window(config, workdir, model, samplers, idx):
 
     # jit warm up
     print("Waiting for JIT...")
+    start_time = time.time()
     for step in range(config.training.max_steps):
-        start_time = time.time()
-
         # Sample mini-batch
         batch = {}
         for key, sampler in samplers.items():
@@ -143,6 +142,7 @@ def train_one_window(config, workdir, model, samplers, idx):
                 end_time = time.time()
                 # Report training metrics
                 logger.log_iter(step, start_time, end_time, log_dict)
+                start_time = end_time
 
         # Save checkpoint
         if config.saving.save_every_steps is not None:

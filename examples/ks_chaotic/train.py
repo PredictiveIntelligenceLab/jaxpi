@@ -26,9 +26,8 @@ def train_one_window(config, workdir, model, res_sampler, u_ref, idx):
     step_offset = idx * config.training.max_steps
 
     print("Waiting for JIT...")
+    start_time = time.time()
     for step in range(config.training.max_steps):
-        start_time = time.time()
-
         batch = next(res_sampler)
         model.state = model.step(model.state, batch)
 
@@ -47,8 +46,8 @@ def train_one_window(config, workdir, model, res_sampler, u_ref, idx):
                 wandb.log(log_dict, step + step_offset)
 
                 end_time = time.time()
-
                 logger.log_iter(step, start_time, end_time, log_dict)
+                start_time = end_time
 
         # Save model checkpoint
         if config.saving.save_every_steps is not None:

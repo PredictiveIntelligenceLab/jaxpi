@@ -51,9 +51,8 @@ def train_curriculum(config, workdir, model, step_offset, max_steps, Re):
 
     # jit warm up
     print("Waiting for JIT...")
+    start_time = time.time()
     for step in range(max_steps):
-        start_time = time.time()
-
         batch = next(res_sampler)
         model.state = model.step(model.state, batch, nu)
 
@@ -74,6 +73,7 @@ def train_curriculum(config, workdir, model, step_offset, max_steps, Re):
                 end_time = time.time()
                 # Report training metrics
                 logger.log_iter(step, start_time, end_time, log_dict)
+                start_time = end_time
 
         # Save checkpoint
         if config.saving.save_every_steps is not None:

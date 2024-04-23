@@ -91,9 +91,8 @@ def train_and_evaluate(config: ml_collections.ConfigDict, workdir: str):
 
     # jit warm up
     print("Waiting for JIT...")
+    start_time = time.time()
     for step in range(config.training.max_steps):
-        start_time = time.time()
-
         batch = next(res_sampler)
         model.state = model.step(model.state, batch)
 
@@ -114,6 +113,7 @@ def train_and_evaluate(config: ml_collections.ConfigDict, workdir: str):
                 end_time = time.time()
                 # Report training metrics
                 logger.log_iter(step, start_time, end_time, log_dict)
+                start_time = end_time
 
         # Save checkpoint
         if config.saving.save_every_steps is not None:

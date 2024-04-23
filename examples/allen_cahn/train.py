@@ -48,11 +48,9 @@ def train_and_evaluate(config: ml_collections.ConfigDict, workdir: str):
     evaluator = models.AllenCanhEvaluator(config, model)
 
     print("Waiting for JIT...")
+    start_time = time.time()
     for step in range(config.training.max_steps):
-        start_time = time.time()
-
         batch = next(res_sampler)
-
         model.state = model.step(model.state, batch)
 
         if config.weighting.scheme in ["grad_norm", "ntk"]:
@@ -69,8 +67,8 @@ def train_and_evaluate(config: ml_collections.ConfigDict, workdir: str):
                 wandb.log(log_dict, step)
 
                 end_time = time.time()
-
                 logger.log_iter(step, start_time, end_time, log_dict)
+                start_time = end_time
 
         # Saving
         if config.saving.save_every_steps is not None:
