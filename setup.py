@@ -11,10 +11,10 @@ except IOError:
 setup(
     name="jaxpi",
     version="0.0.1",
-    url="https://github.com/PredictiveIntelligenceLab/JAX-PI",
+    url="https://github.com/PredictiveIntelligenceLab/jaxpi",
     author="Sifan Wang, Shyam Sankaran, Hanwen Wang",
     packages=find_packages(),
-    python_requires=">=3.8",
+    python_requires=">=3.9",
     install_requires=[
         "absl-py",
         "flax",
