@@ -14,7 +14,7 @@ setup(
     url="https://github.com/PredictiveIntelligenceLab/jaxpi",
     author="Sifan Wang, Shyam Sankaran, Hanwen Wang",
     packages=find_packages(),
-    python_requires=">=3.9",
+    python_requires=">=3.8",
     install_requires=[
         "absl-py",
         "flax",
