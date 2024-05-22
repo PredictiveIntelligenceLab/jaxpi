@@ -61,13 +61,13 @@ This process involved finding the relative optimal combination of network archit
 To replicate these results, use the following command:
 
 ```
-python3 main.py --config/sota.py
+python3 main.py --config=configs/sota.py
 ```
 
 Once training is complete, use the following command to acquire the final predicted error and its corresponding visualization:
 
 ```
-python3 main.py --config/sota.py --mode=eval
+python3 main.py --config=configs/sota.py --config.mode=eval
 ```
 
 The best relative $L^2$ error is  $6.884\times 10^{-4}$. The figure below shows the exact solution, prediction, and absolute error. 
