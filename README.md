@@ -74,7 +74,7 @@ If you encounter an out-of-memory error, you can decrease the batch size using t
 To evaluate the model's performance, you can switch to evaluation mode with the following command:
 
 ```
-python main.py --config.mode=eval
+python3 main.py --config.mode=eval
 ```
 
 

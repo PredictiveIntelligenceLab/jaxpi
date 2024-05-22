@@ -36,13 +36,13 @@ We present our state-of-the-art results. These are achieved by conducting a comp
 To replicate these results, use the following command:
 
 ```
-python3 main.py --config/sota.py
+python3 main.py --config=configs/sota.py
 ```
 
 After training, use the following command to get the final predicted error and visualization.
 
 ```
-python3 main.py --config/sota.py --mode=eval
+python3 main.py --config=configs/sota.py --config.mode=eval
 ```
 
 
