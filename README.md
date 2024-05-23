@@ -17,6 +17,15 @@ This  repository also releases an extensive range of benchmarking examples, show
 Our implementation supports both **single** and **multi-GPU** training, while evaluation is currently limited to
 single-GPU setups.
 
+
+## Updates
+
+- **May 2024**: We have released the code for our latest paper, "PirateNets: Physics-informed Deep Learning with Residual Adaptive Networks". 
+Please see repo branch `piratenet` for the implementation and examples.
+
+
+
+
 ## Installation
 
 Ensure that you have Python 3.8 or later installed on your system.
