@@ -21,7 +21,7 @@ single-GPU setups.
 ## Updates
 
 - **May 2024**: We have released the code for our latest paper, "PirateNets: Physics-informed Deep Learning with Residual Adaptive Networks". 
-Please see repo branch `piratenet` for the implementation and examples.
+Please see repo branch `pirate` for the implementation and examples.
 
 
 
