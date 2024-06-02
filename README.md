@@ -61,7 +61,7 @@ To illustrate how to use our code, we will use the advection equation as an exam
 First, navigate to the advection directory within the `examples` folder:
 
 ``` 
-cd JAX-PI/examples/advection
+cd jaxpi/examples/advection
 ``` 
 To train the model, run the following command:
 ```
