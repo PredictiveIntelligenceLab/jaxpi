@@ -21,7 +21,7 @@ single-GPU setups.
 ## Updates
 
 - **May 2024**: We have released the code for our latest paper, "PirateNets: Physics-informed Deep Learning with Residual Adaptive Networks". 
-Please see repo branch `pirate` for the implementation and examples.
+Please see repo branch [pirate](https://github.com/PredictiveIntelligenceLab/jaxpi/tree/pirate) for the implementation and examples.
 
 
 
@@ -33,16 +33,21 @@ Our code is GPU-only.
 We highly recommend using the most recent versions of JAX and JAX-lib, along with compatible CUDA and cuDNN versions.
 The code has been tested and confirmed to work with the following versions:
 
-- JAX 0.4.16
-- CUDA 12.1
+- JAX 0.4.26
+- CUDA 12.4
 - cuDNN 8.9
 
+You can install the latest versions of JAX and JAX-lib with the following commands:
+```
+pip3 install -U pip
+pip3 install --upgrade jax jaxlib
+```
 
 Install JAX-PI with the following commands:
 
 ``` 
-git clone https://github.com/PredictiveIntelligenceLab/JAX-PI
-cd JAX-PI
+git clone https://github.com/PredictiveIntelligenceLab/jaxpi.git
+cd jaxpi
 pip install .
 ```
 
