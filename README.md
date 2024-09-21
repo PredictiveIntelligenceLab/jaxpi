@@ -10,6 +10,9 @@ The usage instructions for this branch are consistent with those in the main bra
 
 ## Benchmarks
 
+The following table shows the performance of PirateNets compared to JAX-PI on a set of benchmark problems. The accuracy is measured in 
+relative $L^2$ error between the predicted and true solutions.
+
 | **Benchmark** | PirateNet             | JAX-PI                |     
 |---------------|-----------------------|-----------------------|
 | Allen-Cahn    | $2.24 \times 10^{−5}$ | $5.37 \times 10^{−5}$ |
@@ -17,9 +20,6 @@ The usage instructions for this branch are consistent with those in the main bra
 | Gray-Scott    | $3.61 \times 10^{−3}$ | $6.13$                |
 | Ginzburg-Landau | $1.49 \times 10^{−2}$ | $3.20 \times 10^{−2}$ |
 | Lid-driven cavity flow (Re=3200) | $4.21 \times 10^{−2}$ | $1.58 \times 10^{−1}$ |
-
-
-
 
 
 ### Grey-Scott
