@@ -20,7 +20,7 @@ single-GPU setups.
 
 ## Updates
 
-- **Nov 2024**: We observed that the reproducibility of our codebase is significantly affected by matual precisions in JAX. 
+- **Nov 2024**: We observed that the reproducibility of our code is significantly affected by matual precisions set in JAX. 
 To fix this, we set the default precision to `highest` in our codebase. 
 
 - **May 2024**: We have released the code for our latest paper, "PirateNets: Physics-informed Deep Learning with Residual Adaptive Networks". 
