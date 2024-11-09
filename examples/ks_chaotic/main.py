@@ -10,6 +10,9 @@ from absl import logging
 
 from ml_collections import config_flags
 
+import jax
+jax.config.update("jax_default_matmul_precision", "highest")
+
 import train
 import eval
 
