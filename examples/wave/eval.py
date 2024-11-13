@@ -25,6 +25,9 @@ def evaluate(config: ml_collections.ConfigDict, workdir: str):
     u0 = u_ref[0, :]
 
     # Restore model
+    if config.use_pi_init:
+        config.arch.pi_init = jnp.zeros((config.arch.hidden_dim, config.arch.out_dim))
+
     model = models.Wave(config, u0, t_star, x_star, c)
     ckpt_path = os.path.join(workdir, "ckpt", config.wandb.name)
     model.state = restore_checkpoint(model.state, ckpt_path)

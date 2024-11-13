@@ -26,8 +26,9 @@ def evaluate(config: ml_collections.ConfigDict, workdir: str):
     t = t_star[:num_time_steps]
 
     # Initialize the model
-    # Warning: t must be the same as the one used in training, otherwise the prediction will be wrong
-    # This is because the input t is scaled inside the model forward pass
+    if config.use_pi_init:
+        config.arch.pi_init = jnp.zeros((config.arch.hidden_dim, config.arch.out_dim))
+
     model = models.KS(config, u0, t, x_star)
 
     u_pred_list = []
