@@ -51,6 +51,9 @@ def _create_arch(config):
     elif config.arch_name == "DeepONet":
         arch = archs.DeepONet(**config)
 
+    elif config.arch_name == "ActNet":
+        arch = archs.ActNet(**config)
+
     else:
         raise NotImplementedError(f"Arch {config.arch_name} not supported yet!")
 
@@ -67,6 +70,45 @@ def _create_optimizer(config):
         tx = optax.adam(
             learning_rate=lr, b1=config.beta1, b2=config.beta2, eps=config.eps
         )
+    elif config.optimizer == "Adam_warmup":
+        lr = optax.warmup_exponential_decay_schedule(
+            init_value=config.init_value,
+            peak_value=config.peak_value,
+            warmup_steps=config.warmup_steps,
+            transition_steps=config.decay_steps,
+            decay_rate=config.decay_rate,
+            end_value=config.end_value,
+        )
+        tx = optax.adam(
+            learning_rate=lr, b1=config.beta1, b2=config.beta2, eps=config.eps
+        )
+    elif config.optimizer == "AdamAGC":
+        lr = optax.exponential_decay(
+            init_value=config.learning_rate,
+            transition_steps=config.decay_steps,
+            decay_rate=config.decay_rate,
+        )
+        adm = optax.adam(
+            learning_rate=lr, b1=config.beta1, b2=config.beta2, eps=config.eps
+        )
+        tx = optax.chain(
+            optax.adaptive_grad_clip(1e-2), adm
+        )
+    elif config.optimizer == "AdamAGC_warmup":
+        lr = optax.warmup_exponential_decay_schedule(
+            init_value=config.init_value,
+            peak_value=config.peak_value,
+            warmup_steps=config.warmup_steps,
+            transition_steps=config.decay_steps,
+            decay_rate=config.decay_rate,
+            end_value=config.end_value,
+        )
+        adm = optax.adam(
+            learning_rate=lr, b1=config.beta1, b2=config.beta2, eps=config.eps
+        )
+        tx = optax.chain(
+            optax.adaptive_grad_clip(1e-2), adm
+        )
 
     else:
         raise NotImplementedError(f"Optimizer {config.optimizer} not supported yet!")
@@ -78,11 +120,13 @@ def _create_optimizer(config):
     return tx
 
 
-def _create_train_state(config):
+def _create_train_state(config, tabulate=False):
     # Initialize network
     arch = _create_arch(config.arch)
     x = jnp.ones(config.input_dim)
     params = arch.init(random.PRNGKey(config.seed), x)
+    if tabulate:
+        print(arch.tabulate(random.PRNGKey(config.seed), x, console_kwargs={'width':110}))
 
     # Initialize optax optimizer
     tx = _create_optimizer(config.optim)
@@ -104,7 +148,7 @@ def _create_train_state(config):
 class PINN:
     def __init__(self, config):
         self.config = config
-        self.state = _create_train_state(config)
+        self.state = _create_train_state(config, tabulate=True)
 
     def u_net(self, params, *args):
         raise NotImplementedError("Subclasses should implement this!")
