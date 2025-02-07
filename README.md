@@ -11,6 +11,7 @@ This repository is a comprehensive implementation of physics-informed neural net
 - [Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains](https://arxiv.org/abs/2006.10739)
 - [A Method for Representing Periodic Functions and Enforcing Exactly Periodic Boundary Conditions with Deep Neural Networks](https://www.sciencedirect.com/science/article/abs/pii/S0021999121001376)
 - [Characterizing Possible Failure Modes in Physics-Informed Neural Networks](https://arxiv.org/abs/2109.01050)
+- [Deep Learning Alternatives of the Kolmogorov Superposition Theorem](https://arxiv.org/abs/2410.01990)
 
 
 This  repository also releases an extensive range of benchmarking examples, showcasing the effectiveness and robustness of our implementation.
@@ -19,6 +20,8 @@ single-GPU setups.
 
 
 ## Updates
+- **February 2025** This repository now includes code for our latest paper "Deep Learning Alternatives of the Kolmogorov Superposition Theorem", using the ActNet architecture.
+Please see repo branch [ActNet](https://github.com/PredictiveIntelligenceLab/jaxpi/tree/ActNet) for the implementation and examples.
 
 - **Nov 2024**: We observed that the reproducibility of our code is significantly affected by matual precisions set in JAX. 
 To fix this, we set the default precision to `highest` in our codebase. 
