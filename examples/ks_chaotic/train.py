@@ -23,11 +23,15 @@ def train_one_window(config, workdir, model, res_sampler, u_ref, idx):
 
     evaluator = models.KSEvaluator(config, model)
 
-    step_offset = idx * config.training.max_steps
-
     print("Waiting for JIT...")
     start_time = time.time()
-    for step in range(config.training.max_steps):
+    if type(config.training.max_steps) == int: # use the same number of steps for every window
+        num_steps = config.training.max_steps
+        step_offset = idx * config.training.max_steps
+    else: # config.training.max_steps is a list w/ an entry for each window
+        num_steps = config.training.max_steps[idx]
+        step_offset = sum(config.training.max_steps[:idx])
+    for step in range(num_steps):
         batch = next(res_sampler)
         model.state = model.step(model.state, batch)
 
@@ -53,7 +57,7 @@ def train_one_window(config, workdir, model, res_sampler, u_ref, idx):
         if config.saving.save_every_steps is not None:
             if (step + 1) % config.saving.save_every_steps == 0 or (
                 step + 1
-            ) == config.training.max_steps:
+            ) == num_steps:
                 ckpt_path = os.path.join(os.getcwd(), config.wandb.name, "ckpt", "time_window_{}".format(idx + 1))
                 save_checkpoint(model.state, ckpt_path, keep=config.saving.num_keep_ckpts)
 
