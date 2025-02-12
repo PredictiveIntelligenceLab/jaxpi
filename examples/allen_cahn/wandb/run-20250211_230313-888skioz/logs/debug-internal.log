@@ -1,0 +1,16 @@
+{"time":"2025-02-11T23:03:13.299922916-05:00","level":"INFO","msg":"using version","core version":"0.18.6"}
+{"time":"2025-02-11T23:03:13.299969636-05:00","level":"INFO","msg":"created symlink","path":"/scratch/pgp/jaxpi/examples/allen_cahn/wandb/run-20250211_230313-888skioz/logs/debug-core.log"}
+{"time":"2025-02-11T23:03:13.419350819-05:00","level":"INFO","msg":"created new stream","id":"888skioz"}
+{"time":"2025-02-11T23:03:13.419396329-05:00","level":"INFO","msg":"stream: started","id":"888skioz"}
+{"time":"2025-02-11T23:03:13.419516649-05:00","level":"INFO","msg":"sender: started","stream_id":"888skioz"}
+{"time":"2025-02-11T23:03:13.419483509-05:00","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"888skioz"}}
+{"time":"2025-02-11T23:03:13.419558039-05:00","level":"INFO","msg":"handler: started","stream_id":{"value":"888skioz"}}
+{"time":"2025-02-11T23:03:13.667329676-05:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-02-11T23:03:40.269080364-05:00","level":"INFO","msg":"stream: closing","id":"888skioz"}
+{"time":"2025-02-11T23:03:40.269162254-05:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-02-11T23:03:40.270168385-05:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-02-11T23:03:40.593558177-05:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-02-11T23:03:40.717374191-05:00","level":"INFO","msg":"handler: closed","stream_id":{"value":"888skioz"}}
+{"time":"2025-02-11T23:03:40.717414591-05:00","level":"INFO","msg":"writer: Close: closed","stream_id":{"value":"888skioz"}}
+{"time":"2025-02-11T23:03:40.717450161-05:00","level":"INFO","msg":"sender: closed","stream_id":"888skioz"}
+{"time":"2025-02-11T23:03:40.717622041-05:00","level":"INFO","msg":"stream: closed","id":"888skioz"}

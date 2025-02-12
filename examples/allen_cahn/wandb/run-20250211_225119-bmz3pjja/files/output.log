@@ -1,0 +1,33 @@
+[22:51:20 - main - INFO] Use physics-informed initialization...
+Traceback (most recent call last):
+  File "/scratch/pgp/jaxpi/examples/allen_cahn/main.py", line 41, in <module>
+    app.run(main)
+  File "/scratch/pgp/anaconda3/envs/python_3.11/lib/python3.11/site-packages/absl/app.py", line 308, in run
+    _run_main(main, args)
+  File "/scratch/pgp/anaconda3/envs/python_3.11/lib/python3.11/site-packages/absl/app.py", line 254, in _run_main
+    sys.exit(main(argv))
+             ^^^^^^^^^^
+  File "/scratch/pgp/jaxpi/examples/allen_cahn/main.py", line 33, in main
+    train.train_and_evaluate(FLAGS.config, FLAGS.workdir)
+  File "/scratch/pgp/jaxpi/examples/allen_cahn/train.py", line 51, in train_and_evaluate
+    model = models.AllenCahn(config, u0, t_star, x_star)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/pgp/jaxpi/examples/allen_cahn/models.py", line 17, in __init__
+    super().__init__(config)
+  File "/scratch/pgp/anaconda3/envs/python_3.11/lib/python3.11/site-packages/jaxpi/models.py", line 203, in __init__
+    super().__init__(config)
+  File "/scratch/pgp/anaconda3/envs/python_3.11/lib/python3.11/site-packages/jaxpi/models.py", line 129, in __init__
+    self.state = _create_train_state(config)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/pgp/anaconda3/envs/python_3.11/lib/python3.11/site-packages/jaxpi/models.py", line 110, in _create_train_state
+    params = arch.init(random.PRNGKey(config.seed), x)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/pgp/anaconda3/envs/python_3.11/lib/python3.11/site-packages/jaxpi/archs.py", line 368, in __call__
+    u = Dense(features=self.hidden_dim, reparam=self.reparam, param_dtype=self.param_dtype)(x)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/pgp/anaconda3/envs/python_3.11/lib/python3.11/site-packages/jaxpi/archs.py", line 128, in __call__
+    g, v = self.param(
+           ^^^^^^^^^^^
+TypeError: _weight_fact.<locals>.init() takes 2 positional arguments but 3 were given
+--------------------
+For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.

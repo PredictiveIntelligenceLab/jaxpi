@@ -1,0 +1,26 @@
+2025-02-11 23:01:46,898 INFO    MainThread:81226 [wandb_setup.py:_flush():79] Current SDK version is 0.18.6
+2025-02-11 23:01:46,898 INFO    MainThread:81226 [wandb_setup.py:_flush():79] Configure stats pid to 81226
+2025-02-11 23:01:46,898 INFO    MainThread:81226 [wandb_setup.py:_flush():79] Loading settings from /home1/p/pgp/.config/wandb/settings
+2025-02-11 23:01:46,898 INFO    MainThread:81226 [wandb_setup.py:_flush():79] Loading settings from /scratch/pgp/jaxpi/examples/allen_cahn/wandb/settings
+2025-02-11 23:01:46,898 INFO    MainThread:81226 [wandb_setup.py:_flush():79] Loading settings from environment variables: {}
+2025-02-11 23:01:46,898 INFO    MainThread:81226 [wandb_setup.py:_flush():79] Applying setup settings: {'mode': None, '_disable_service': None}
+2025-02-11 23:01:46,899 INFO    MainThread:81226 [wandb_setup.py:_flush():79] Inferring run settings from compute environment: {'program_relpath': 'examples/allen_cahn/main.py', 'program_abspath': '/scratch/pgp/jaxpi/examples/allen_cahn/main.py', 'program': '/scratch/pgp/jaxpi/examples/allen_cahn/main.py'}
+2025-02-11 23:01:46,899 INFO    MainThread:81226 [wandb_setup.py:_flush():79] Applying login settings: {}
+2025-02-11 23:01:46,899 INFO    MainThread:81226 [wandb_init.py:_log_setup():533] Logging user logs to /scratch/pgp/jaxpi/examples/allen_cahn/wandb/run-20250211_230146-g6gw2jsi/logs/debug.log
+2025-02-11 23:01:46,899 INFO    MainThread:81226 [wandb_init.py:_log_setup():534] Logging internal logs to /scratch/pgp/jaxpi/examples/allen_cahn/wandb/run-20250211_230146-g6gw2jsi/logs/debug-internal.log
+2025-02-11 23:01:46,899 INFO    MainThread:81226 [wandb_init.py:init():619] calling init triggers
+2025-02-11 23:01:46,899 INFO    MainThread:81226 [wandb_init.py:init():626] wandb.init called with sweep_config: {}
+config: {}
+2025-02-11 23:01:46,899 INFO    MainThread:81226 [wandb_init.py:init():669] starting backend
+2025-02-11 23:01:46,899 INFO    MainThread:81226 [wandb_init.py:init():673] sending inform_init request
+2025-02-11 23:01:46,901 INFO    MainThread:81226 [backend.py:_multiprocessing_setup():104] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2025-02-11 23:01:46,902 INFO    MainThread:81226 [wandb_init.py:init():686] backend started and connected
+2025-02-11 23:01:46,905 INFO    MainThread:81226 [wandb_init.py:init():781] updated telemetry
+2025-02-11 23:01:46,917 INFO    MainThread:81226 [wandb_init.py:init():814] communicating run to backend with 90.0 second timeout
+2025-02-11 23:01:47,275 INFO    MainThread:81226 [wandb_init.py:init():867] starting run threads in backend
+2025-02-11 23:01:47,574 INFO    MainThread:81226 [wandb_run.py:_console_start():2451] atexit reg
+2025-02-11 23:01:47,574 INFO    MainThread:81226 [wandb_run.py:_redirect():2299] redirect: wrap_raw
+2025-02-11 23:01:47,574 INFO    MainThread:81226 [wandb_run.py:_redirect():2364] Wrapping output streams.
+2025-02-11 23:01:47,574 INFO    MainThread:81226 [wandb_run.py:_redirect():2389] Redirects installed.
+2025-02-11 23:01:47,576 INFO    MainThread:81226 [wandb_init.py:init():911] run started, returning control to user process
+2025-02-11 23:01:54,813 WARNING MsgRouterThr:81226 [router.py:message_loop():75] message_loop has been closed

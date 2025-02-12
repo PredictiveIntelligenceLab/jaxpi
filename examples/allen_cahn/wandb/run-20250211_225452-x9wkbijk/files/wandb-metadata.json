@@ -1,0 +1,82 @@
+{
+  "os": "Linux-6.4.0-150600.23.30-default-x86_64-with-glibc2.38",
+  "python": "3.11.10",
+  "startedAt": "2025-02-12T03:54:52.376523Z",
+  "args": [
+    "--config=configs/pirate.py"
+  ],
+  "program": "/scratch/pgp/jaxpi/examples/allen_cahn/main.py",
+  "codePath": "examples/allen_cahn/main.py",
+  "git": {
+    "remote": "https://github.com/PredictiveIntelligenceLab/jaxpi.git",
+    "commit": "498415b5cd0cda286c1039a3fe8a935a51575992"
+  },
+  "email": "pgp@seas.upenn.edu",
+  "root": "/scratch/pgp/jaxpi/examples/allen_cahn",
+  "host": "blade.seas.upenn.edu",
+  "username": "pgp",
+  "executable": "/scratch/pgp/anaconda3/envs/python_3.11/bin/python",
+  "codePathLocal": "main.py",
+  "cpu_count": 128,
+  "cpu_count_logical": 256,
+  "gpu": "NVIDIA RTX A6000",
+  "gpu_count": 7,
+  "disk": {
+    "/": {
+      "total": "3761863258112",
+      "used": "3296907358208"
+    }
+  },
+  "memory": {
+    "total": "540756848640"
+  },
+  "cpu": {
+    "count": 128,
+    "countLogical": 256
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere"
+    },
+    {
+      "name": "NVIDIA RTX A6000",
+      "memoryTotal": "51527024640",
+      "cudaCores": 10752,
+      "architecture": "Ampere"
+    }
+  ],
+  "cudaVersion": "12.5"
+}

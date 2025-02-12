@@ -2,8 +2,8 @@ from functools import partial
 
 import jax
 import jax.numpy as jnp
-from jax import lax, jit, grad, vmap
-from jax.tree_util import tree_map
+from jax import lax, jit, grad, vmap, pmap, jacrev
+from jax.tree_util import tree_map, tree_reduce, tree_leaves
 
 from jaxpi.models import ForwardIVP
 from jaxpi.evaluator import BaseEvaluator
@@ -45,6 +45,7 @@ class AllenCahn(ForwardIVP):
         t_sorted = batch[:, 0].sort()
         r_pred = vmap(self.r_net, (None, 0, 0))(params, t_sorted, batch[:, 1])
         # Split residuals into chunks
+        r_pred = jnp.asarray(r_pred, dtype=jnp.float32)
         r_pred = r_pred.reshape(self.num_chunks, -1)
         l = jnp.mean(r_pred**2, axis=1)
         w = lax.stop_gradient(jnp.exp(-self.tol * (self.M @ l)))
@@ -53,7 +54,10 @@ class AllenCahn(ForwardIVP):
     @partial(jit, static_argnums=(0,))
     def losses(self, params, batch):
         # Initial condition loss
-        u_pred = vmap(self.u_net, (None, None, 0))(params, self.t0, self.x_star)
+        t0 = jnp.asarray(self.t0, dtype=jnp.float16)
+        x_star = jnp.asarray(self.x_star, dtype=jnp.float16)
+        u_pred = vmap(self.u_net, (None, None, 0))(params, t0, x_star)
+        u_pred = jnp.asarray(u_pred, dtype=jnp.float32)
         ics_loss = jnp.mean((self.u0 - u_pred) ** 2)
 
         # Residual loss
@@ -62,6 +66,7 @@ class AllenCahn(ForwardIVP):
             res_loss = jnp.mean(l * w)
         else:
             r_pred = vmap(self.r_net, (None, 0, 0))(params, batch[:, 0], batch[:, 1])
+            r_pred = jnp.asarray(r_pred, dtype=jnp.float32)
             res_loss = jnp.mean((r_pred) ** 2)
 
         loss_dict = {"ics": ics_loss, "res": res_loss}
@@ -100,6 +105,73 @@ class AllenCahn(ForwardIVP):
         u_pred = self.u_pred_fn(params, self.t_star, self.x_star)
         error = jnp.linalg.norm(u_pred - u_test) / jnp.linalg.norm(u_test)
         return error
+
+    @partial(jit, static_argnums=(0,))
+    def loss(self, params, weights, batch, *args):
+        # Cast to float16 for computations
+        params_f16 = tree_map(lambda x: x.astype(jnp.float16), params)
+        weights_f16 = tree_map(lambda x: x.astype(jnp.float16), weights)
+        batch_f16 = jnp.asarray(batch, dtype=jnp.float16)
+        # Compute losses
+        losses = self.losses(params_f16, batch_f16, *args)
+        # Compute weighted loss
+        weighted_losses = tree_map(lambda x, y: x * y, losses, weights_f16)
+        # Sum weighted losses
+        loss = tree_reduce(lambda x, y: x + y, weighted_losses)
+        return loss
+
+    @partial(jit, static_argnums=(0,))
+    def compute_weights(self, params, batch, *args):
+        params_f16 = tree_map(lambda x: x.astype(jnp.float16), params)
+        batch_f16 = jnp.asarray(batch, dtype=jnp.float16)
+        if self.config.weighting.scheme == "grad_norm":
+            # Compute the gradient of each loss w.r.t. the parameters
+            grads = jacrev(self.losses)(params_f16, batch_f16, *args)
+
+            # Compute the grad norm of each loss
+            grad_norm_dict = {}
+            for key, value in grads.items():
+                flattened_grad = flatten_pytree(value)
+                grad_norm_dict[key] = jnp.linalg.norm(flattened_grad)
+
+            # Compute the mean of grad norms over all losses
+            mean_grad_norm = jnp.mean(jnp.stack(tree_leaves(grad_norm_dict)))
+            # Grad Norm Weighting
+            w = tree_map(
+                lambda x: (mean_grad_norm / (x + 1e-5 * mean_grad_norm)), grad_norm_dict
+            )
+
+        elif self.config.weighting.scheme == "ntk":
+            # Compute the diagonal of the NTK of each loss
+            ntk = self.compute_diag_ntk(params_f16, batch_f16, *args)
+
+            # Compute the mean of the diagonal NTK corresponding to each loss
+            mean_ntk_dict = tree_map(lambda x: jnp.mean(x), ntk)
+
+            # Compute the average over all ntk means
+            mean_ntk = jnp.mean(jnp.stack(tree_leaves(mean_ntk_dict)))
+            # NTK Weighting
+            w = tree_map(lambda x: (mean_ntk / (x + 1e-5 * mean_ntk)), mean_ntk_dict)
+
+        return w
+
+    @partial(pmap, axis_name="batch", static_broadcasted_argnums=(0,))
+    def update_weights(self, state, batch, *args):
+        weights = self.compute_weights(state.params, batch, *args)
+        # Convert back to float32 before applying updates
+        weights = jax.tree_map(lambda x: x.astype(jnp.float32), weights)
+        weights = lax.pmean(weights, "batch")
+        state = state.apply_weights(weights=weights)
+        return state
+
+    @partial(pmap, axis_name="batch", static_broadcasted_argnums=(0,))
+    def step(self, state, batch, *args):
+        grads = grad(self.loss)(state.params, state.weights, batch, *args)
+        # Convert back to float32 before applying updates
+        grads = jax.tree_map(lambda x: x.astype(jnp.float32), grads)
+        grads = lax.pmean(grads, "batch")
+        state = state.apply_gradients(grads=grads)
+        return state
 
 
 class AllenCanhEvaluator(BaseEvaluator):

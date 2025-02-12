@@ -12,7 +12,7 @@ def get_config():
     # Weights & Biases
     config.wandb = wandb = ml_collections.ConfigDict()
     wandb.project = "PINN-AllenCahn"
-    wandb.name = "pirate"
+    wandb.name = "pirate-mixed-precision"
     wandb.tag = None
 
     # Physics-informed initialization
@@ -41,7 +41,7 @@ def get_config():
     optim.optimizer = "Adam"
     optim.beta1 = 0.9
     optim.beta2 = 0.999
-    optim.eps = 1e-8
+    optim.eps = 1e-5
     optim.learning_rate = 1e-3
     optim.decay_rate = 0.9
     optim.decay_steps = 5000
@@ -56,7 +56,7 @@ def get_config():
 
     # Weighting
     config.weighting = weighting = ml_collections.ConfigDict()
-    weighting.scheme = "ntk"
+    weighting.scheme = "grad_norm"
     weighting.init_weights = ml_collections.ConfigDict({"ics": 1.0, "res": 1.0})
     weighting.momentum = 0.9
     weighting.update_every_steps = 1000

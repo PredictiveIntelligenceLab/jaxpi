@@ -1,0 +1,19 @@
+[21:36:14 - main - INFO] Use physics-informed initialization...
+least square residuals:  [0.5449065]
+[21:36:20 - main - INFO] Waiting for JIT...
+Traceback (most recent call last):
+  File "/scratch/pgp/jaxpi/examples/allen_cahn/main.py", line 41, in <module>
+    app.run(main)
+  File "/scratch/pgp/anaconda3/envs/python_3.11/lib/python3.11/site-packages/absl/app.py", line 308, in run
+    _run_main(main, args)
+  File "/scratch/pgp/anaconda3/envs/python_3.11/lib/python3.11/site-packages/absl/app.py", line 254, in _run_main
+    sys.exit(main(argv))
+             ^^^^^^^^^^
+  File "/scratch/pgp/jaxpi/examples/allen_cahn/main.py", line 33, in main
+    train.train_and_evaluate(FLAGS.config, FLAGS.workdir)
+  File "/scratch/pgp/jaxpi/examples/allen_cahn/train.py", line 105, in train_and_evaluate
+    model.state = model.update_weights(model.state, batch)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+jaxlib.xla_extension.XlaRuntimeError: RESOURCE_EXHAUSTED: Out of memory while trying to allocate 47941680448 bytes.
+--------------------
+For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.

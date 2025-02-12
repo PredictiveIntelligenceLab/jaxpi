@@ -129,7 +129,7 @@ class Dense(nn.Module):
                     mean=self.reparam["mean"],
                     stddev=self.reparam["stddev"],
                 ),
-                (x.shape[-1], self.features),
+                (x.shape[-1], self.features)
             )
             kernel = g * v
 
@@ -371,7 +371,7 @@ class PirateNet(nn.Module):
                 output_dim=x.shape[-1],
                 activation=self.activation,
                 nonlinearity=self.nonlinearity,
-                reparam=self.reparam,
+                reparam=self.reparam
             )(x, u, v)
 
         if self.pi_init is not None:

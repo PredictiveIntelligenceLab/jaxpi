@@ -1,0 +1,8 @@
+{"time":"2025-02-11T23:46:34.281093224-05:00","level":"INFO","msg":"using version","core version":"0.18.6"}
+{"time":"2025-02-11T23:46:34.281150564-05:00","level":"INFO","msg":"created symlink","path":"/scratch/pgp/jaxpi/examples/allen_cahn/wandb/run-20250211_234634-v0y4kx8j/logs/debug-core.log"}
+{"time":"2025-02-11T23:46:34.500072317-05:00","level":"INFO","msg":"created new stream","id":"v0y4kx8j"}
+{"time":"2025-02-11T23:46:34.500111007-05:00","level":"INFO","msg":"stream: started","id":"v0y4kx8j"}
+{"time":"2025-02-11T23:46:34.500228097-05:00","level":"INFO","msg":"sender: started","stream_id":"v0y4kx8j"}
+{"time":"2025-02-11T23:46:34.500145197-05:00","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"v0y4kx8j"}}
+{"time":"2025-02-11T23:46:34.500262527-05:00","level":"INFO","msg":"handler: started","stream_id":{"value":"v0y4kx8j"}}
+{"time":"2025-02-11T23:46:34.775616132-05:00","level":"INFO","msg":"Starting system monitor"}

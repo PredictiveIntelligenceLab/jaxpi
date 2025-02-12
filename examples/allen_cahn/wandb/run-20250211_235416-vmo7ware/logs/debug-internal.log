@@ -1,0 +1,16 @@
+{"time":"2025-02-11T23:54:16.059029853-05:00","level":"INFO","msg":"using version","core version":"0.18.6"}
+{"time":"2025-02-11T23:54:16.059084363-05:00","level":"INFO","msg":"created symlink","path":"/scratch/pgp/jaxpi/examples/allen_cahn/wandb/run-20250211_235416-vmo7ware/logs/debug-core.log"}
+{"time":"2025-02-11T23:54:16.279184836-05:00","level":"INFO","msg":"created new stream","id":"vmo7ware"}
+{"time":"2025-02-11T23:54:16.279229326-05:00","level":"INFO","msg":"stream: started","id":"vmo7ware"}
+{"time":"2025-02-11T23:54:16.279307196-05:00","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"vmo7ware"}}
+{"time":"2025-02-11T23:54:16.279437966-05:00","level":"INFO","msg":"sender: started","stream_id":"vmo7ware"}
+{"time":"2025-02-11T23:54:16.279354936-05:00","level":"INFO","msg":"handler: started","stream_id":{"value":"vmo7ware"}}
+{"time":"2025-02-11T23:54:16.544339143-05:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-02-11T23:59:39.807089262-05:00","level":"INFO","msg":"stream: closing","id":"vmo7ware"}
+{"time":"2025-02-11T23:59:39.807167132-05:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-02-11T23:59:39.808318133-05:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-02-11T23:59:40.170659814-05:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-02-11T23:59:40.265205384-05:00","level":"INFO","msg":"handler: closed","stream_id":{"value":"vmo7ware"}}
+{"time":"2025-02-11T23:59:40.265247124-05:00","level":"INFO","msg":"writer: Close: closed","stream_id":{"value":"vmo7ware"}}
+{"time":"2025-02-11T23:59:40.265283594-05:00","level":"INFO","msg":"sender: closed","stream_id":"vmo7ware"}
+{"time":"2025-02-11T23:59:40.265520134-05:00","level":"INFO","msg":"stream: closed","id":"vmo7ware"}

@@ -1,0 +1,16 @@
+{"time":"2025-02-11T22:55:35.664097225-05:00","level":"INFO","msg":"using version","core version":"0.18.6"}
+{"time":"2025-02-11T22:55:35.664149475-05:00","level":"INFO","msg":"created symlink","path":"/scratch/pgp/jaxpi/examples/allen_cahn/wandb/run-20250211_225535-tegsvdit/logs/debug-core.log"}
+{"time":"2025-02-11T22:55:35.782903647-05:00","level":"INFO","msg":"created new stream","id":"tegsvdit"}
+{"time":"2025-02-11T22:55:35.782947357-05:00","level":"INFO","msg":"stream: started","id":"tegsvdit"}
+{"time":"2025-02-11T22:55:35.783314528-05:00","level":"INFO","msg":"writer: Do: started","stream_id":{"value":"tegsvdit"}}
+{"time":"2025-02-11T22:55:35.783381088-05:00","level":"INFO","msg":"handler: started","stream_id":{"value":"tegsvdit"}}
+{"time":"2025-02-11T22:55:35.783482678-05:00","level":"INFO","msg":"sender: started","stream_id":"tegsvdit"}
+{"time":"2025-02-11T22:55:35.991402214-05:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-02-11T22:55:45.274816332-05:00","level":"INFO","msg":"stream: closing","id":"tegsvdit"}
+{"time":"2025-02-11T22:55:45.274913972-05:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-02-11T22:55:45.275994402-05:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-02-11T22:55:45.581489238-05:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-02-11T22:55:45.684263021-05:00","level":"INFO","msg":"handler: closed","stream_id":{"value":"tegsvdit"}}
+{"time":"2025-02-11T22:55:45.684319381-05:00","level":"INFO","msg":"sender: closed","stream_id":"tegsvdit"}
+{"time":"2025-02-11T22:55:45.684287021-05:00","level":"INFO","msg":"writer: Close: closed","stream_id":{"value":"tegsvdit"}}
+{"time":"2025-02-11T22:55:45.684461101-05:00","level":"INFO","msg":"stream: closed","id":"tegsvdit"}
