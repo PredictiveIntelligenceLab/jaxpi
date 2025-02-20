@@ -13,6 +13,9 @@ import optax
 from jaxpi import archs
 from jaxpi.utils import flatten_pytree
 
+from soap_jax import soap  # Install from https://github.com/haydn-jones/SOAP_JAX
+from psgd_jax.kron import kron
+
 
 class TrainState(train_state.TrainState):
     weights: Dict
@@ -67,35 +70,56 @@ def _create_arch(config):
 
 
 def _create_optimizer(config):
-    if config.optimizer == "Adam":
-        lr = optax.exponential_decay(
-            init_value=config.learning_rate,
-            transition_steps=config.decay_steps,
-            decay_rate=config.decay_rate,
-            staircase=config.staircase,
+
+    lr = optax.exponential_decay(
+        init_value=config.learning_rate,
+        transition_steps=config.decay_steps,
+        decay_rate=config.decay_rate,
+        staircase=config.staircase
         )
 
-        if config.warmup_steps > 0:
-            warmup = optax.linear_schedule(
-                init_value=0.0,
-                end_value=config.learning_rate,
-                transition_steps=config.warmup_steps,
-            )
+    if config.warmup_steps > 0:
+        warmup = optax.linear_schedule(init_value=0.0, end_value=config.learning_rate,
+                                       transition_steps=config.warmup_steps)
 
-            lr = optax.join_schedules([warmup, lr], [config.warmup_steps])
+        lr = optax.join_schedules([warmup, lr], [config.warmup_steps])
 
+    if config.optimizer == "Adam":
         tx = optax.adam(
             learning_rate=lr, b1=config.beta1, b2=config.beta2, eps=config.eps
         )
 
-    else:
-        raise NotImplementedError(f"Optimizer {config.optimizer} not supported yet!")
+    elif config.optimizer == "Soap":
+
+        tx = soap(
+            learning_rate=lr, b1=config.beta1, b2=config.beta2, weight_decay=0.0, precondition_frequency=2
+            )
+
+    elif config.optimizer == "Muon":
+        tx = optax.contrib.muon(
+            learning_rate=lr,
+        )
+
+    elif config.optimizer == "Lamb":
+        tx = optax.lamb(
+            learning_rate=lr, b1=config.beta1, b2=config.beta2, eps=config.eps
+        )
+
+    elif config.optimizer == "Adagrad":
+        tx = optax.adagrad(
+            learning_rate=lr, eps=config.eps
+        )
+
+    elif config.optimizer == "RMSProp":
+        tx = optax.rmsprop(
+            learning_rate=lr
+        )
 
     # Gradient accumulation
     if config.grad_accum_steps > 1:
         tx = optax.MultiSteps(tx, every_k_schedule=config.grad_accum_steps)
 
-    return tx
+    return lr, tx
 
 
 def _create_train_state(config, params=None, weights=None):
