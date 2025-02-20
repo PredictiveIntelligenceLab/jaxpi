@@ -158,6 +158,13 @@ its relative $L^2$ error, and links to the corresponding model [checkpoints](htt
       year={2024}
     }
 
+    
+    @article{wang2025gradient,
+      title={Gradient Alignment in Physics-informed Neural Networks: A Second-Order Optimization Perspective},
+      author={Wang, Sifan and Bhartari, Ananyae Kumar and Li, Bowen and Perdikaris, Paris},
+      journal={arXiv preprint arXiv:2502.00604},
+      year={2025}
+    }
 
 
 
