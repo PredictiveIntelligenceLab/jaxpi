@@ -21,13 +21,15 @@ single-GPU setups.
 
 
 ## Updates
-- **February 2025** This repository now includes code for our latest paper "Deep Learning Alternatives of the Kolmogorov Superposition Theorem", using the ActNet architecture.
+
+
+- **Feb 2025**: We have released the code for our latest paper, "Gradient Alignment in Physics-informed Neural Networks: A Second-Order Optimization Perspective" in  branch [pirate](https://github.com/PredictiveIntelligenceLab/jaxpi/tree/pirate)
+
+- **Feb 2025** This repository now includes code for our latest paper "Deep Learning Alternatives of the Kolmogorov Superposition Theorem", using the ActNet architecture.
 Please see repo branch [ActNet](https://github.com/PredictiveIntelligenceLab/jaxpi/tree/ActNet) for the implementation and examples.
 
 - **Nov 2024**: We observed that the reproducibility of our code is significantly affected by matual precisions set in JAX. 
 To fix this, we set the default precision to `highest` in our codebase. 
-
-- **Feb 2025**: We have released the code for our latest paper, "Gradient Alignment in Physics-informed Neural Networks: A Second-Order Optimization Perspective" in  branch [pirate](https://github.com/PredictiveIntelligenceLab/jaxpi/tree/pirate)
 
 - **May 2024**: We have released the code for our latest paper, "PirateNets: Physics-informed Deep Learning with Residual Adaptive Networks". 
 Please see repo branch [pirate](https://github.com/PredictiveIntelligenceLab/jaxpi/tree/pirate) for the implementation and examples.
