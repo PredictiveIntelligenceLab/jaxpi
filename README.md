@@ -2,6 +2,7 @@
 
 This repository is a comprehensive implementation of physics-informed neural networks (PINNs), seamlessly integrating several advanced network architectures, training algorithms from these papers 
 
+- [Gradient Alignment in Physics-informed Neural Networks: A Second-Order Optimization Perspective](https://arxiv.org/abs/2502.00604)
 - [Understanding and Mitigating Gradient Flow Pathologies in Physics-Informed Neural Networks](https://epubs.siam.org/doi/10.1137/20M1318043)
 - [When and Why PINNs Fail to Train: A Neural Tangent Kernel Perspective](https://www.sciencedirect.com/science/article/pii/S002199912100663X?casa_token=YlzVQK6hGy8AAAAA:bKwMNg70UoeEuisR1cd1KZnR20xspdvYp1dM4jLkl_wfVDX7O1j2IOlGZsYnC4esu7YcMaO_WOIC)
 - [Respecting Causality for Training Physics-informed Neural Networks](https://www.sciencedirect.com/science/article/pii/S0045782524000690)
@@ -25,6 +26,8 @@ Please see repo branch [ActNet](https://github.com/PredictiveIntelligenceLab/jax
 
 - **Nov 2024**: We observed that the reproducibility of our code is significantly affected by matual precisions set in JAX. 
 To fix this, we set the default precision to `highest` in our codebase. 
+
+- **Feb 2025**: We have released the code for our latest paper, "Gradient Alignment in Physics-informed Neural Networks: A Second-Order Optimization Perspective" in  branch [pirate](https://github.com/PredictiveIntelligenceLab/jaxpi/tree/pirate)
 
 - **May 2024**: We have released the code for our latest paper, "PirateNets: Physics-informed Deep Learning with Residual Adaptive Networks". 
 Please see repo branch [pirate](https://github.com/PredictiveIntelligenceLab/jaxpi/tree/pirate) for the implementation and examples.
@@ -133,6 +136,10 @@ its relative $L^2$ error, and links to the corresponding model [checkpoints](htt
 ### Ginzburg–Landau
 
 ![Ginzburg–Landau](examples/ginzburg_landau/figures/gl_animation.gif)
+
+### Kolmogorov flow
+
+![Kolmogorov flow](examples/kolmogorov_flow/figures/kf.gif)
 
 
 ## Citation
