@@ -143,6 +143,10 @@ its relative $L^2$ error, and links to the corresponding model [checkpoints](htt
 
 ![Kolmogorov flow](examples/kolmogorov_flow/figures/kf.gif)
 
+### Rayleigh–Taylor instability
+
+![Rayleigh–Taylor instability](examples/rayleigh_taylor/figures/rayleigh_taylor.gif)
+
 
 ## Citation
 
