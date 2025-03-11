@@ -78,12 +78,12 @@ class Stokes2D(ForwardBVP):
         v_xx = v_hessian[0][0]
         v_yy = v_hessian[1][1]
 
-        ru = -(u_xx + u_yy) + p_x
-        rv = -(v_xx + v_yy) + p_y
+        ru = -(u_xx + u_yy)/self.Re + p_x
+        rv = -(v_xx + v_yy)/self.Re + p_y
         rc = u_x + v_y
 
-        u_out = u_x - p
-        v_out = v_x
+        u_out = u_x/self.Re - p
+        v_out = v_x/self.Re
 
         return ru, rv, rc, u_out, v_out
 
