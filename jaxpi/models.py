@@ -128,7 +128,7 @@ def _create_train_state(config, params=None, weights=None):
     x = jnp.ones(config.input_dim)
 
     # Initialize optax optimizer
-    tx = _create_optimizer(config.optim)
+    lr, tx = _create_optimizer(config.optim)
 
     if params is None:
         params = arch.init(random.PRNGKey(config.seed), x)
