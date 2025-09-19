@@ -12,7 +12,7 @@ def get_config():
     # Weights & Biases
     config.wandb = wandb = ml_collections.ConfigDict()
     wandb.project = "PINN-GinzburgLandau_square"
-    wandb.name = "pirate"
+    wandb.name = "pirate_soap"
     wandb.tag = None
 
     # Set the fractional size of the full temporal domain
