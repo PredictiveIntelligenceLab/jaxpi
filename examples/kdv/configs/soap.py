@@ -11,28 +11,27 @@ def get_config():
 
     # Weights & Biases
     config.wandb = wandb = ml_collections.ConfigDict()
-    wandb.project = "PINN-GinzburgLandau_square"
-    wandb.name = "default"
+    wandb.project = "PINN-KDV"
+    wandb.name = "pirate_soap"
     wandb.tag = None
 
-    # Set the fractional size of the full temporal domain
-    config.time_fraction = [0.0, 1.0]
-
-    config.use_pi_init = False
+    # Physics-informed initialization
+    config.use_pi_init = True
+    config.pi_init_type = "initial_condition"
 
     # Arch
     config.arch = arch = ml_collections.ConfigDict()
-    arch.arch_name = "ModifiedMlp"
+    arch.arch_name = "PirateNet"
     arch.num_layers = 3
     arch.hidden_dim = 256
-    arch.out_dim = 2
-    arch.activation = "swish"  # test tanh
+    arch.out_dim = 1
+    arch.activation = "tanh"
     arch.periodicity = ml_collections.ConfigDict(
-        {"period": (jnp.pi, jnp.pi), "axis": (1, 2), "trainable": (False, False)}
+        {"period": (jnp.pi,), "axis": (1,), "trainable": (False,)}
     )
     arch.fourier_emb = ml_collections.ConfigDict({"embed_scale": 1.0, "embed_dim": 256})
     arch.reparam = ml_collections.ConfigDict(
-        {"type": "weight_fact", "mean": 0.5, "stddev": 0.1}
+        {"type": "weight_fact", "mean": 1.0, "stddev": 0.1}
     )
     arch.pi_init = None
 
@@ -48,25 +47,22 @@ def get_config():
     optim.staircase = False
     optim.warmup_steps = 5000
     optim.grad_accum_steps = 0
-    optim.schedule_free = False
+    optim.schedule_free = True
 
     # Training
     config.training = training = ml_collections.ConfigDict()
-    training.max_steps = 100000
-    training.batch_size_per_device = 4096 * 2
-    training.num_time_windows = 5
+    training.max_steps = 200000
+    training.batch_size_per_device = 4096
 
     # Weighting
     config.weighting = weighting = ml_collections.ConfigDict()
     weighting.scheme = "grad_norm"
-    weighting.init_weights = ml_collections.ConfigDict(
-        {"u_ic": 1.0, "v_ic": 1.0, "ru": 1.0, "rv": 1.0}
-    )
+    weighting.init_weights = ml_collections.ConfigDict({"ics": 1.0, "res": 1.0})
     weighting.momentum = 0.9
     weighting.update_every_steps = 1000
 
     weighting.use_causal = True
-    weighting.causal_tol = 1.0
+    weighting.causal_tol = 0.1
     weighting.num_chunks = 16
 
     # Logging
@@ -75,7 +71,7 @@ def get_config():
     logging.log_errors = True
     logging.log_losses = True
     logging.log_weights = True
-    logging.log_nonlinearities = False
+    logging.log_nonlinearities = True
     logging.log_preds = False
     logging.log_grads = False
     logging.log_ntk = False
@@ -85,8 +81,8 @@ def get_config():
     saving.save_every_steps = 10000
     saving.num_keep_ckpts = 10
 
-    # # Input shape for initializing Flax models
-    config.input_dim = 3
+    # Input shape for initializing Flax models
+    config.input_dim = 2
 
     # Integer for PRNG random seed.
     config.seed = 42

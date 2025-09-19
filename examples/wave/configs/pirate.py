@@ -46,6 +46,7 @@ def get_config():
     optim.staircase = False
     optim.warmup_steps = 5000
     optim.grad_accum_steps = 0
+    optim.schedule_free = False
 
     # Training
     config.training = training = ml_collections.ConfigDict()

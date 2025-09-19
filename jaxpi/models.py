@@ -95,9 +95,19 @@ def _create_optimizer(config):
             learning_rate=lr, b1=config.beta1, b2=config.beta2, weight_decay=0.0, precondition_frequency=2
             )
 
+
+    elif config.optimizer == "Kron":
+            tx = kron(
+                learning_rate=lr, b1=config.beta1
+                )
+
     elif config.optimizer == "Muon":
         tx = optax.contrib.muon(
             learning_rate=lr,
+            ns_coeffs=(2, -1.5, 0.5),
+            ns_steps=10,
+            beta=0.99,
+            adam_b1=0.99
         )
 
     elif config.optimizer == "Lamb":
@@ -114,6 +124,12 @@ def _create_optimizer(config):
         tx = optax.rmsprop(
             learning_rate=lr
         )
+
+    if config.schedule_free:
+        tx = optax.chain(
+            optax.clip_by_global_norm(1.0),
+            optax.contrib.schedule_free(tx, lr, b1=config.beta1)
+            )
 
     # Gradient accumulation
     if config.grad_accum_steps > 1:

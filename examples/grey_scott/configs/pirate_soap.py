@@ -11,22 +11,22 @@ def get_config():
 
     # Weights & Biases
     config.wandb = wandb = ml_collections.ConfigDict()
-    wandb.project = "PINN-GinzburgLandau_square"
-    wandb.name = "default"
+    wandb.project = "PINN-Grey_Scott"
+    wandb.name = "pirate"
     wandb.tag = None
 
     # Set the fractional size of the full temporal domain
     config.time_fraction = [0.0, 1.0]
 
-    config.use_pi_init = False
+    config.use_pi_init = True
 
     # Arch
     config.arch = arch = ml_collections.ConfigDict()
-    arch.arch_name = "ModifiedMlp"
+    arch.arch_name = "PirateNet"
     arch.num_layers = 3
     arch.hidden_dim = 256
     arch.out_dim = 2
-    arch.activation = "swish"  # test tanh
+    arch.activation = "swish"
     arch.periodicity = ml_collections.ConfigDict(
         {"period": (jnp.pi, jnp.pi), "axis": (1, 2), "trainable": (False, False)}
     )
@@ -34,11 +34,12 @@ def get_config():
     arch.reparam = ml_collections.ConfigDict(
         {"type": "weight_fact", "mean": 0.5, "stddev": 0.1}
     )
+    arch.nonlinearity = 0.0
     arch.pi_init = None
 
     # Optim
     config.optim = optim = ml_collections.ConfigDict()
-    optim.optimizer = "Adam"
+    optim.optimizer = "Soap"
     optim.beta1 = 0.9
     optim.beta2 = 0.999
     optim.eps = 1e-8
@@ -48,13 +49,13 @@ def get_config():
     optim.staircase = False
     optim.warmup_steps = 5000
     optim.grad_accum_steps = 0
-    optim.schedule_free = False
+    optim.schedule_free = True
 
     # Training
     config.training = training = ml_collections.ConfigDict()
     training.max_steps = 100000
-    training.batch_size_per_device = 4096 * 2
-    training.num_time_windows = 5
+    training.batch_size_per_device = 4096
+    training.num_time_windows = 10
 
     # Weighting
     config.weighting = weighting = ml_collections.ConfigDict()
@@ -67,7 +68,7 @@ def get_config():
 
     weighting.use_causal = True
     weighting.causal_tol = 1.0
-    weighting.num_chunks = 16
+    weighting.num_chunks = 32
 
     # Logging
     config.logging = logging = ml_collections.ConfigDict()
@@ -75,7 +76,7 @@ def get_config():
     logging.log_errors = True
     logging.log_losses = True
     logging.log_weights = True
-    logging.log_nonlinearities = False
+    logging.log_nonlinearities = True
     logging.log_preds = False
     logging.log_grads = False
     logging.log_ntk = False
