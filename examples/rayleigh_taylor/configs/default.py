@@ -11,7 +11,7 @@ def get_config():
 
     # Weights & Biases
     config.wandb = wandb = ml_collections.ConfigDict()
-    wandb.project = "PINN-NS_tori"
+    wandb.project = "PINN-Rayleigh-Taylor"
     wandb.name = "default"
     wandb.tag = None
 
