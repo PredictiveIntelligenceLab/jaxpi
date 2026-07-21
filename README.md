@@ -59,8 +59,12 @@ Install JAX-PI with the following commands:
 ``` 
 git clone https://github.com/PredictiveIntelligenceLab/jaxpi.git
 cd jaxpi
-pip install .
+pip install ".[examples]"
 ```
+
+The `examples` extra installs the logging, configuration, plotting, and
+scientific-computing dependencies used by the scripts under `examples/`. For a
+minimal library installation, use `pip install .` instead.
 
 ## Quickstart
 
@@ -171,6 +175,5 @@ its relative $L^2$ error, and links to the corresponding model [checkpoints](htt
       journal={arXiv preprint arXiv:2502.00604},
       year={2025}
     }
-
 
 

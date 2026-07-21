@@ -1,12 +1,9 @@
-from setuptools import setup, find_packages
-import os
+from pathlib import Path
 
-_CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
+from setuptools import find_packages, setup
 
-try:
-    README = open(os.path.join(_CURRENT_DIR, "README.md"), encoding="utf-8").read()
-except IOError:
-    README = ""
+
+README = Path(__file__).with_name("README.md").read_text(encoding="utf-8")
 
 setup(
     name="jaxpi",
@@ -16,22 +13,24 @@ setup(
     packages=find_packages(),
     python_requires=">=3.8",
     install_requires=[
-        "absl-py",
         "flax",
         "jax",
-        "jaxlib",
-        "matplotlib",
-        "ml_collections",
         "numpy",
         "optax",
-        "scipy",
-        "wandb",
     ],
     extras_require={
+        "examples": [
+            "absl-py",
+            "matplotlib",
+            "ml_collections",
+            "scipy",
+            "tabulate",
+            "wandb",
+        ],
         "testing": ["pytest"],
     },
     license="Apache 2.0",
     description="A library of PINNs models in JAX Flax.",
-    long_description=open(os.path.join(_CURRENT_DIR, "README.md")).read(),
+    long_description=README,
     long_description_content_type="text/markdown",
 )
