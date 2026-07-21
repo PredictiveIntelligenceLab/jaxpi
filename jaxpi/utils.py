@@ -5,9 +5,9 @@ from functools import partial
 import jax
 import jax.numpy as jnp
 from jax import jit, grad
-from jax.tree_util import tree_map
 from jax.flatten_util import ravel_pytree
 
+from flax import jax_utils
 from flax.training import checkpoints
 
 
@@ -32,6 +32,8 @@ def ntk_fn(apply_fn, params, *args):
 
 
 def save_checkpoint(state, workdir, keep=5, name=None):
+    workdir = os.path.abspath(workdir)
+
     # Create the workdir if it doesn't exist.
     if not os.path.isdir(workdir):
         os.makedirs(workdir)
@@ -39,26 +41,19 @@ def save_checkpoint(state, workdir, keep=5, name=None):
     # Save the checkpoint.
     if jax.process_index() == 0:
         # Get the first replica's state and save it.
-        state = jax.device_get(tree_map(lambda x: x[0], state))
+        state = jax.device_get(jax_utils.unreplicate(state))
         step = int(state.step)
         checkpoints.save_checkpoint(workdir, state, step=step, keep=keep)
 
 
 def restore_checkpoint(state, workdir, step=None):
-    # check if passed state is in a sharded state
-    # if so, reduce to a single device sharding
+    workdir = os.path.abspath(workdir)
 
-    if isinstance(
-        tree_map(lambda x: jnp.array(x).sharding, jax.tree.leaves(state.params))[0],
-        jax.sharding.PmapSharding,
-    ):
-        state = tree_map(lambda x: x[0], state)
-
-    # ensuring that we're in a single device setting
-    assert isinstance(
-        tree_map(lambda x: jnp.array(x).sharding, jax.tree.leaves(state.params))[0],
-        jax.sharding.SingleDeviceSharding,
-    )
+    # Model states are replicated for pmap. Check the scalar step rather than
+    # relying on JAX sharding implementation classes, which change across JAX
+    # versions.
+    if jnp.ndim(state.step) > 0:
+        state = jax_utils.unreplicate(state)
 
     state = checkpoints.restore_checkpoint(workdir, state, step=step)
     return state
